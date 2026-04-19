@@ -3,11 +3,11 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\RecurringTransaction;
+use App\Models\Recurring;
 use App\Models\Transaction;
 use Carbon\Carbon;
 
-class GenerateRecurringTransactions extends Command
+class GenerateRecurring extends Command
 {
     /**
      * The name and signature of the console command.
@@ -29,7 +29,7 @@ class GenerateRecurringTransactions extends Command
     public function handle()
     {
         $today = Carbon::today();
-        $recurrings = RecurringTransaction::all();
+        $recurrings = Recurring::all();
     
         foreach ($recurrings as $r) {
     

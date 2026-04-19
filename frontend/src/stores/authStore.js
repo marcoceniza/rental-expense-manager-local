@@ -47,6 +47,7 @@ export const useAuthStore = defineStore('auth', () => {
     const register = async (userData) => {
         authLoading.value = true;
         try {
+            await axios.get('http://localhost/rental-expense-manager/server/public/sanctum/csrf-cookie', { withCredentials: true });
             await api.post('/register', userData);
             router.push('/login');
         } catch (error) {

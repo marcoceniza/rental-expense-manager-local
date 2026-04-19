@@ -40,6 +40,90 @@ watch(currentMonth, (month) => {
 	reportStore.loadCharityStats(month);
 });
 
+const charityAreaChart = computed(() => {
+	const expense = Number(charityStats.value.expense) || 0;
+
+	return {
+		series: [
+			{
+				name: 'Tuition Expense',
+				data: [0, expense], // subtle sparkline effect
+			},
+		],
+
+		options: {
+			chart: {
+				type: 'area',
+				sparkline: {
+					enabled: false,
+				},
+				toolbar: { show: false },
+				animations: {
+					enabled: true,
+					easing: 'easeinout',
+					speed: 600,
+				},
+			},
+
+			stroke: {
+				curve: 'smooth',
+				width: 3,
+			},
+
+			fill: {
+				type: 'gradient',
+				gradient: {
+					shadeIntensity: 1,
+					opacityFrom: 0.4,
+					opacityTo: 0.05,
+					stops: [0, 100],
+				},
+			},
+
+			xaxis: {
+				categories: ['Start', 'This Month'],
+				labels: {
+					show: false,
+				},
+				axisBorder: {
+					show: false,
+				},
+				axisTicks: {
+					show: false,
+				},
+			},
+
+			yaxis: {
+				labels: {
+					formatter: (val) => {
+					if (val >= 1000) return `₱${(val / 1000).toFixed(1)}K`;
+					return `₱${val}`;
+					},
+				},
+			},
+
+			dataLabels: {
+				enabled: false,
+			},
+
+			colors: ['#ef4444'],
+
+			grid: {
+				show: false,
+			},
+
+			tooltip: {
+				y: {
+					formatter: (val) => {
+						if (val >= 1000) return `₱${(val / 1000).toFixed(1)}K`;
+						return `₱${val}`;
+					},
+				},
+			},
+		},
+	};
+});
+
 onMounted(async () => {
 	await categoriesStore.fetchCategories();
 	await transactionsStore.fetchTransactions();
@@ -76,19 +160,19 @@ onMounted(async () => {
 			</div>
 		</div>
 
-		<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 			<div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-				<div class="flex items-center gap-3 mb-4">
-					<div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
-						<TrendingUp class="w-5 h-5" />
-					</div>
-					<p class="text-sm font-bold text-slate-500 uppercase tracking-wider">
-						Tuition Income
-					</p>
+				<apexchart
+					v-if="!charityLoading"
+					type="line"
+					height="300"
+					:options="charityAreaChart.options"
+					:series="charityAreaChart.series"
+				/>
+
+				<div v-else class="text-center text-slate-400 italic py-12">
+					No data available for this year.
 				</div>
-				<h3 class="text-2xl font-bold text-slate-900">
-					{{ formatCurrency(charityStats.income || 0) }}
-				</h3>
 			</div>
 
 			<div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
@@ -102,21 +186,6 @@ onMounted(async () => {
 				</div>
 				<h3 class="text-2xl font-bold text-slate-900">
 					{{ formatCurrency(charityStats.expense || 0) }}
-				</h3>
-			</div>
-
-			<div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-				<div class="flex items-center gap-3 mb-4">
-					<div class="p-2 bg-blue-50 text-blue-600 rounded-lg">
-						<Wallet class="w-5 h-5" />
-					</div>
-					<p class="text-sm font-bold text-slate-500 uppercase tracking-wider">
-						Net Support
-					</p>
-				</div>
-				<h3 class="text-2xl font-bold"
-					:class="(charityStats.net || 0) >= 0 ? 'text-emerald-600' : 'text-rose-600'">
-					{{ formatCurrency(charityStats.net || 0) }}
 				</h3>
 			</div>
 		</div>

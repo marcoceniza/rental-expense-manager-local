@@ -18,7 +18,8 @@ const router = createRouter({
         {
             path: '/',
             component: DashboardLayout,
-            meta: { requiresAuth: true },
+            // meta: { requiresAuth: true },
+            meta: { guest: true },
             children: [
                 { path: 'dashboard', name: 'Dashboard', component: Dashboard },
                 { path: 'transactions', name: 'Transactions', component: Transactions },
@@ -49,9 +50,7 @@ router.beforeEach(async (to, from, next) => {
     const auth = useAuthStore();
 
     // ✅ if user not loaded yet, fetch it
-    if (!auth.user) {
-        await auth.fetchUser();
-    }
+    if (!auth.user) await auth.fetchUser();
 
     if (to.meta.requiresAuth && !auth.isAuthenticated) {
         next('/login');

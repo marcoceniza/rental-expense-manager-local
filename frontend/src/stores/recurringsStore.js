@@ -20,7 +20,7 @@ export const useRecurringStore = defineStore('recurring', () => {
 
         recurringLoading.value.fetch = true;
         try {
-            const response = await api.get('/recurring-transactions');
+            const response = await api.get('/recurrings');
             recurringTransactions.value = response.data.data ?? response.data;
             isRecurringLoaded.value = true;
         } catch (error) {
@@ -33,7 +33,7 @@ export const useRecurringStore = defineStore('recurring', () => {
     const addRecurring = async (data) => {
         recurringLoading.value.add = true;
         try {
-            await api.post('/recurring-transactions', data);
+            await api.post('/recurrings', data);
             await fetchRecurring(true);
             showToast('Recurring transaction added', 'success');
         } catch (error) {
@@ -51,7 +51,7 @@ export const useRecurringStore = defineStore('recurring', () => {
     const updateRecurring = async (id, data) => {
         recurringLoading.value.update = true;
         try {
-            await api.put(`/recurring-transactions/${id}`, data);
+            await api.put(`/recurrings/${id}`, data);
             await fetchRecurring(true);
             showToast('Recurring transaction updated', 'success');
         } catch (error) {
@@ -69,7 +69,7 @@ export const useRecurringStore = defineStore('recurring', () => {
     const deleteRecurring = async (id) => {
         recurringLoading.value.delete = true;
         try {
-            await api.delete(`/recurring-transactions/${id}`);
+            await api.delete(`/recurrings/${id}`);
             await fetchRecurring(true);
             showToast('Recurring transaction deleted', 'success');
         } catch (error) {

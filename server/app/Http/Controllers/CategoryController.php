@@ -14,7 +14,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return CategoryResource::collection(Category::all());
+        $categories = Category::withCount('transactions')->get();
+
+        return CategoryResource::collection($categories);
     }
 
     /**
@@ -78,6 +80,13 @@ class CategoryController extends Controller
     public function forceDelete($id)
     {
         $category = Category::withTrashed()->findOrFail($id);
+
+        if ($category->transactions()->exists()) {
+            return response()->json([
+                'error' => 'Category has transactions'
+            ], 400);
+        }
+
         $category->forceDelete();
 
         return response()->noContent();

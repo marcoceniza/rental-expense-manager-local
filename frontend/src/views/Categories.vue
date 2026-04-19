@@ -3,13 +3,13 @@ import { ref, computed, onMounted } from 'vue';
 import { useCategoriesStore } from '@/stores/categoriesStore';
 import { Plus, Search, Filter, Pencil, Trash2, X, Check, Tag } from 'lucide-vue-next';
 import { storeToRefs } from 'pinia';
-import BaseButton from '@/components/base/BaseButton.vue';
 import ConfirmDelete from '@/components/ConfirmDelete.vue';
+import CategoryModal from '@/components/CategoryModal.vue';
 
 const categoriesStore = useCategoriesStore();
 const { categories, categoriesLoading, categoryTypes, errors } = storeToRefs(categoriesStore);
 
-const showModal = ref(false);
+const showCategoryModal = ref(false);
 const editingId = ref(null);
 const searchQuery = ref('');
 const typeFilter = ref('all');
@@ -19,6 +19,7 @@ const getConfirmDeleteData = ref({
     id: null,
     name: '',
 });
+const selectedCategory = ref(null);
 
 const formData = ref({
     name: '',
@@ -36,6 +37,7 @@ const filteredCategories = computed(() => {
 });
 
 const openModal = (c) => {
+    selectedCategory.value = c;
     if (c) {
         editingId.value = c.id;
         formData.value = { ...c };
@@ -47,11 +49,11 @@ const openModal = (c) => {
             is_tuition: false
         };
     }
-    showModal.value = true;
+    showCategoryModal.value = true;
 };
 
 const closeModal = () => {
-    showModal.value = false;
+    showCategoryModal.value = false;
     editingId.value = null;
 
 	formData.value = {
@@ -124,7 +126,7 @@ onMounted(() => {
             <div class="flex items-center gap-2 w-full md:w-auto">
                 <Filter class="w-5 h-5 text-slate-400" />
                 <select v-model="typeFilter"
-                    class="bg-slate-50 border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 transition-all font-medium text-slate-700 min-w-37.5">
+                    class="bg-slate-50 border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 transition-all font-medium text-slate-700 min-w-37.5 cursor-pointer">
                     <option value="all">All Types</option>
                     <option value="income">Income</option>
                     <option value="expense">Expense</option>
@@ -156,8 +158,13 @@ onMounted(() => {
                             class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer">
                             <Pencil class="w-4 h-4" />
                         </button>
-                        <button @click="confirmDeleteHandler(c.id, c.name)"
-                            class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer">
+                        <button
+                            @click="confirmDeleteHandler(c.id, c.name)"
+                            class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            :class=" c.transactions_count > 0 ? 'cursor-not-allowed opacity-50 pointer-none' : 'cursor-pointer' "
+                            :disabled="c.transactions_count > 0"
+                            :title="c.transactions_count > 0 ? 'Category is in use and cannot be deleted' : 'Delete category'"
+                        >
                             <Trash2 class="w-4 h-4" />
                         </button>
                     </div>
@@ -176,71 +183,16 @@ onMounted(() => {
             </div>
         </div>
 
-        <div v-if="showModal"
-            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-            <div
-                class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-                <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
-                    <h3 class="text-xl font-bold text-slate-900">{{ editingId ? 'Edit Category' : 'New Category' }}</h3>
-                    <button @click="closeModal" class="p-2 hover:bg-white rounded-lg transition-colors">
-                        <X class="w-5 h-5 text-slate-400" />
-                    </button>
-                </div>
-
-                <form @submit.prevent="handleSubmit" class="p-6 space-y-4">
-                    <div class="space-y-1.5">
-                        <label class="text-xs font-bold text-slate-500 uppercase">Category Name</label>
-                        <input
-                            v-model="formData.name"
-                            type="text"
-                            placeholder="e.g., Maintenance, Rent, etc."
-                            class="w-full px-4 py-3 bg-slate-50 border rounded-xl transition-all font-medium"
-                            :class="errors?.name?.[0]
-                                ? 'border-red-500 focus:ring-2 focus:ring-red-500'
-                                : 'border-slate-200 focus:ring-2 focus:ring-blue-500'"
-                        />
-                        <p v-if="errors?.name?.length" class="text-red-500 mt-2 text-xs">{{ errors?.name?.[0] }}</p>
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <label class="text-xs font-bold text-slate-500 uppercase">Type</label>
-                        <select v-model="formData.type"
-                            class="w-full px-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 transition-all font-medium">
-                            <option v-for="type in categoryTypes" :key="type" :value="type">
-                                {{ type }}
-                            </option>
-                        </select>
-                    </div>
-
-                    <div class="flex items-center gap-3 p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors">
-                        <input
-                            type="checkbox"
-                            v-model="formData.is_tuition"
-                            class="w-6 h-6 rounded cursor-pointer border-2 flex items-center justify-center transition-all" :class="formData.is_tuition ? 'bg-blue-600 border-blue-600' : 'border-slate-300 bg-white'"
-                        />
-                        <div class="flex-1">
-                            <p class="text-sm font-bold text-slate-700">Tuition Related</p>
-                            <p class="text-xs text-slate-500">Mark this category for Charity/Tuition tracking.</p>
-                        </div>
-                    </div>
-
-                    <div class="pt-4 flex gap-3">
-                        <BaseButton type="button" fullWidth variant="secondary" @click="closeModal" title="Cancel">
-                            Cancel
-                        </BaseButton>
-                        <BaseButton type="submit" fullWidth variant="primary" :title="editingId ? 'Update Category' : 'Add Category'" :disabled="isSubmitting">
-                            <Check class="w-5 h-5" />
-                            <span v-if="isSubmitting">
-								{{ editingId ? 'Updating...' : 'Saving...' }}
-							</span>
-							<span v-else>
-								{{ editingId ? 'Update' : 'Save' }}
-							</span>
-                        </BaseButton>
-                    </div>
-                </form>
-            </div>
-        </div>
+        <CategoryModal
+            v-model:isOpen="showCategoryModal"
+            :editingId="editingId"
+            :formData="formData"
+            :categoryTypes="categoryTypes"
+            :errors="errors"
+            :isSubmitting="isSubmitting"
+            @submit="handleSubmit"
+            :selectedCategory="selectedCategory"
+        />
 
         <ConfirmDelete
             v-if="isShowingDeleteConfirm"
@@ -250,6 +202,7 @@ onMounted(() => {
             :loading="categoriesLoading.delete"
             @confirm="deleteCategory()"
             @close="isShowingDeleteConfirm = false"
+            actionName="category"
         />
 
     </div>

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { Plus, Trash2, X, Check, Repeat, Pencil } from 'lucide-vue-next';
-import { useRecurringStore } from '@/stores/recurringStore';
+import { Plus, Trash2, X, Check, Repeat } from 'lucide-vue-next';
+import { useRecurringStore } from '@/stores/recurringsStore';
 import { useCategoriesStore } from '@/stores/categoriesStore';
 
 const recurringStore = useRecurringStore();

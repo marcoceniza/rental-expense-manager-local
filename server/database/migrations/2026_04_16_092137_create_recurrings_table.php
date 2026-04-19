@@ -15,13 +15,13 @@ return new class extends Migration
             $table->id();
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();
             $table->decimal('amount', 12, 2);
-            $table->string('frequency'); // monthly
-            $table->date('start_date');
+            $table->string('frequency');
+            $table->timestamp('start_date');
             $table->string('description');
         
             // 🔥 Improvements
             $table->boolean('is_active')->default(true);
-            $table->date('last_generated_at')->nullable();
+            $table->timestamp('last_generated_at')->nullable();
             $table->timestamps();
         });
     }

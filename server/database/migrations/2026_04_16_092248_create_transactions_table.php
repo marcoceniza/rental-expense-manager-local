@@ -16,9 +16,9 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();
             $table->enum('type', ['income', 'expense', 'liability']);
             $table->decimal('amount', 12, 2);
-            $table->date('transaction_date');
-            $table->text('description'); // changed from notes
-            $table->text('remarks')->nullable(); // new field
+            $table->timestamp('transaction_date');
+            $table->text('description');
+            $table->text('remarks')->nullable();
             $table->boolean('is_recurring_generated')->default(false);
             $table->foreignId('recurring_id')->nullable()->constrained()->nullOnDelete();
             $table->softDeletes();

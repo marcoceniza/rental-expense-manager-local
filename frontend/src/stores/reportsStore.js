@@ -15,14 +15,18 @@ export const useReportsStore = defineStore('reports', () => {
     const annualLoading = ref(false);
     const categoryLoading = ref(false);
     const charityLoading = ref(false);
-    const { categories } = storeToRefs(useCategoriesStore());
-    const { transactions } = storeToRefs(useTransactionsStore());
+    const categoriesStore = useCategoriesStore();
+    const transactionsStore = useTransactionsStore();
     const charityStats = ref({
         income: 0,
         expense: 0,
         net: 0,
         transactions: []
     });
+    const clearCache = () => {
+        monthlyCache.value = {};
+        annualCache.value = {};
+    };
 
     const getMonthlyStats = async (date, force = false) => {
         const key = format(date, 'yyyy-MM');
@@ -130,15 +134,16 @@ export const useReportsStore = defineStore('reports', () => {
 
     const loadCharityStats = async (month) => {
         charityLoading.value = true;
+
         try {
             const start = startOfMonth(month);
             const end = endOfMonth(month);
 
-            const tuitionCategoryIds = categories.value
+            const tuitionCategoryIds = (categoriesStore.categories || [])
                 .filter(c => Boolean(c.is_tuition))
                 .map(c => Number(c.id));
 
-            const filtered = transactions.value.filter(t => {
+            const filtered = (transactionsStore.transactions || []).filter(t => {
                 if (!t.transaction_date || typeof t.transaction_date !== 'string') return false;
 
                 const date = new Date(t.transaction_date);
@@ -150,21 +155,16 @@ export const useReportsStore = defineStore('reports', () => {
                 );
             });
 
-            const income = filtered
-                .filter(t => t.type === 'income')
-                .reduce((sum, t) => sum + Number(t.amount), 0);
-
+            // 🔥 ONLY EXPENSE
             const expense = filtered
                 .filter(t => t.type === 'expense')
                 .reduce((sum, t) => sum + Number(t.amount), 0);
 
             charityStats.value = {
-                income,
                 expense,
-                net: income - expense,
-                transactions: filtered.sort(
-                    (a, b) => new Date(b.transaction_date) - new Date(a.transaction_date)
-                )
+                transactions: filtered
+                    .filter(t => t.type === 'expense') // optional: only expense in table
+                    .sort((a, b) => new Date(b.transaction_date) - new Date(a.transaction_date))
             };
 
         } catch (error) {
@@ -186,6 +186,9 @@ export const useReportsStore = defineStore('reports', () => {
         getCategoryReport,
         loadCharityStats,
         charityLoading,
-        charityStats
+        charityStats,
+        monthlyCache,
+        annualCache,
+        clearCache
     };
 });

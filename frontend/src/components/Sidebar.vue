@@ -58,7 +58,7 @@ watch(() => route.path, () => {
 			</div>
 
 			<button @click="handleLogout"
-				class="w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-red-400 hover:bg-red-400/10 rounded-xl transition-all duration-200 group">
+				class="w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-red-400 hover:bg-red-400/10 rounded-xl transition-all duration-200 group cursor-pointer">
 				<LogOut class="w-5 h-5 transition-transform group-hover:-translate-x-1" />
 				<span class="font-medium">Logout</span>
 			</button>

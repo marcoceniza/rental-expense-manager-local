@@ -23,9 +23,25 @@ class UpdateCategoryRequest extends FormRequest
      */
     public function rules(): array
     {
+        $category = $this->route('category');
+
         return [
-            'name' => 'sometimes|required|string',
-            'type' => 'sometimes|required|in:income,expense,liability',
+            'name' => 'sometimes|required|string|max:255',
+            'is_tuition' => 'sometimes|boolean',
+            'type' => [
+                'sometimes',
+                'required',
+                'in:income,expense,liability',
+                function ($attribute, $value, $fail) use ($category) {
+                    if (
+                        $category &&
+                        $category->transactions()->exists() &&
+                        $value !== $category->type
+                    ) {
+                        $fail('Cannot change type of category with transactions.');
+                    }
+                }
+            ],
         ];
     }
 }

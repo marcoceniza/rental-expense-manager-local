@@ -2,11 +2,11 @@
   RewriteEngine On
   RewriteBase /rental-expense-manager/
 
-  # If file or folder exists, serve it
+  # If file or folder exists, serve it directly
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # Otherwise redirect everything to index.html
+  # Otherwise route everything to index.html (Vue SPA)
   RewriteRule ^ index.html [L]
 </IfModule>

@@ -7,6 +7,7 @@ use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Requests\UpdateTransactionRequest;
 use App\Http\Resources\TransactionResource;
 use App\Http\Resources\TransactionCollection;
+use Carbon\Carbon;
 
 class TransactionController extends Controller
 {
@@ -25,7 +26,9 @@ class TransactionController extends Controller
      */
     public function store(StoreTransactionRequest $request)
     {
-        $transaction = Transaction::create($request->validated());
+        $data = $request->validated();
+
+        $transaction = Transaction::create($data);
 
         return new TransactionResource(
             $transaction->load('category')
@@ -47,7 +50,9 @@ class TransactionController extends Controller
      */
     public function update(UpdateTransactionRequest $request, Transaction $transaction)
     {
-        $transaction->update($request->validated());
+        $data = $request->validated();
+
+        $transaction->update($data);
 
         return new TransactionResource(
             $transaction->load('category')
@@ -60,6 +65,37 @@ class TransactionController extends Controller
     public function destroy(Transaction $transaction)
     {
         $transaction->delete();
+
+        return response()->noContent();
+    }
+
+    /**
+    * Get trashed transactions.
+    */
+    public function trashed()
+    {
+        return Transaction::onlyTrashed()->with('category')->latest('transaction_date')->paginate(10);
+    }
+
+    /**
+     * Restore transaction.
+     */
+    public function restore($id)
+    {
+        $transaction = Transaction::withTrashed()->findOrFail($id);
+        $transaction->restore();
+
+        return response()->noContent();
+    }
+    
+    /**
+     * Force delete transaction.
+     */
+    public function forceDelete($id)
+    {
+        $transaction = Transaction::withTrashed()->findOrFail($id);
+
+        $transaction->forceDelete();
 
         return response()->noContent();
     }

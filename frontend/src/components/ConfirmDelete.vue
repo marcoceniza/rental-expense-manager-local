@@ -6,6 +6,7 @@ const props = defineProps({
     title: { type: String, default: '' },
     message: { type: String, required: true },
     loading: { type: Boolean, default: false },
+    actionName: { type: String, default: '' },
 })
 
 const emit = defineEmits(['confirm', 'close'])
@@ -23,7 +24,7 @@ const close = () => emit('close')
             </h3>
 
             <p class="text-sm text-gray-600 whitespace-pre-line">
-                Are you sure you want to delete this category <strong class="italic text-red-500">{{ message }}</strong>?
+                Are you sure you want to delete this {{ actionName }} <strong class="italic text-red-500">{{ message }}</strong>?
                 <br /><br />
                 <strong>This action cannot be undone.</strong>
             </p>
