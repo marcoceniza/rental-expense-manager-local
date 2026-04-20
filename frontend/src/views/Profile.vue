@@ -26,7 +26,10 @@ onMounted( async () => {
 <template>
     <div class="space-y-8">
         <div>
-            <h2 class="text-3xl font-bold text-slate-900 tracking-tight">Admin Profile</h2>
+            <h2 class="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
+                <User class="w-8 h-8" />
+                Admin Profile
+            </h2>
             <p class="text-slate-500 mt-1">Manage your personal information and account security.</p>
         </div>
 

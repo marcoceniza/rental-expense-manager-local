@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
 import { format } from 'date-fns';
-import { FileDown, Calendar, PieChart, BarChart3 } from 'lucide-vue-next';
+import { FileDown, Calendar, PieChart, BarChart3, FileChartPie } from 'lucide-vue-next';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { useReportsStore } from '@/stores/reportsStore';
@@ -152,7 +152,10 @@ watch(currentYear, (year) => fetchReports(year));
 	<div class="space-y-8">
 		<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
 			<div>
-				<h2 class="text-3xl font-bold text-slate-900 tracking-tight">Financial Reports</h2>
+				<h2 class="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
+					<FileChartPie class="w-8 h-8" />
+					Financial Reports
+				</h2>
 				<p class="text-slate-500 mt-1">Analyze your annual performance and export summaries.</p>
 			</div>
 

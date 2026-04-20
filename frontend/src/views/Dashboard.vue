@@ -2,7 +2,7 @@
 import { ref, onMounted, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { format, subMonths, addMonths, parseISO } from 'date-fns';
-import { TrendingUp, TrendingDown, Wallet, ArrowUpRight, ArrowDownRight, CreditCard } from 'lucide-vue-next';
+import { TrendingUp, TrendingDown, Wallet, ArrowUpRight, ArrowDownRight, CreditCard, LayoutDashboard } from 'lucide-vue-next';
 import SpinnerLoader from '@/components/SpinnerLoader.vue';
 import { useTransactionsStore } from '@/stores/transactionsStore';
 import { useCategoriesStore } from '@/stores/categoriesStore';
@@ -65,7 +65,8 @@ onMounted(() => {
     <div class="space-y-8">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-                <h2 class="text-3xl font-bold text-slate-900 tracking-tight">
+                <h2 class="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
+                    <LayoutDashboard class="w-8 h-8" />
                     Financial Overview
                 </h2>
                 <p class="text-slate-500 mt-1">

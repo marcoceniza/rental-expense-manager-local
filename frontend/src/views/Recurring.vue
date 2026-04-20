@@ -98,7 +98,10 @@ const formatCurrency = (amount) => {
 		<!-- Header -->
 		<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
 			<div>
-				<h2 class="text-3xl font-bold text-slate-900 tracking-tight">Recurring Transactions</h2>
+				<h2 class="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
+					<Repeat class="w-8 h-8" />
+					Recurring Transactions
+				</h2>
 				<p class="text-slate-500 mt-1">Automate your monthly income and expenses.</p>
 			</div>
 

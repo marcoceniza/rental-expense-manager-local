@@ -8,7 +8,7 @@ import { LayoutGrid, AlertCircle } from 'lucide-vue-next';
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
                 <h2 class="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
-                    <LayoutGrid class="w-8 h-8 text-indigo-600" />
+                    <LayoutGrid class="w-8 h-8" />
                     Others (Super Admin Only)
                 </h2>
                 <p class="text-slate-500 mt-1">This page is restricted to super administrators for advanced system

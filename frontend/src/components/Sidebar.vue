@@ -9,6 +9,7 @@ import { ref, watch } from "vue";
 const route = useRoute();
 const authStore = useAuthStore();
 const { navItems } = storeToRefs(useNavStore());
+const { user } = storeToRefs(authStore);
 
 const isMenuOpen = ref(false);
 
@@ -16,7 +17,6 @@ const handleLogout = () => {
 	authStore.logout();
 };
 
-// Close menu on route change
 watch(() => route.path, () => {
 	isMenuOpen.value = false;
 });
@@ -32,8 +32,9 @@ watch(() => route.path, () => {
 		class="fixed md:sticky top-0 left-0 z-70 w-64 bg-slate-900 text-white shrink-0 flex flex-col h-screen border-r border-slate-800 transition-transform duration-300 md:translate-x-0"
 		:class="isMenuOpen ? 'translate-x-0' : '-translate-x-full'">
 		<div class="p-6 border-b border-slate-800">
-			<h1 class="text-xl font-bold tracking-tight">RentalManager</h1>
-			<p class="text-xs text-slate-400 mt-1">Financial Control System</p>
+			<!-- <h1 class="text-xl font-bold tracking-tight">RentalManager</h1>
+			<p class="text-xs text-slate-400 mt-1">Financial Control System</p> -->
+			<figure><img src="@/assets/rental_manager_logo.png" alt="Rental Manager Logo" class="mx-auto w-62.5"/></figure>
 		</div>
 
 		<nav class="flex-1 p-4 space-y-1 overflow-y-auto">
@@ -49,11 +50,11 @@ watch(() => route.path, () => {
 			<div class="flex items-center gap-3 px-4 py-3 text-slate-400 bg-slate-800/50 rounded-xl">
 				<div
 					class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold text-white shadow-inner">
-					A
+					{{ user?.name ? user.name.charAt(0) : 'A' }}
 				</div>
 				<div class="flex-1 overflow-hidden">
-					<p class="text-sm font-bold text-white truncate">Admin</p>
-					<p class="text-[10px] truncate opacity-60">admin@gmail.com</p>
+					<p class="text-sm font-bold text-white truncate">{{ user?.name || 'Admin' }}</p>
+					<p class="text-[10px] truncate opacity-60">{{ user?.email || 'admin@gmail.com' }}</p>
 				</div>
 			</div>
 

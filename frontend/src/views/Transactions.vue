@@ -3,7 +3,7 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { useTransactionsStore } from '@/stores/transactionsStore';
 import { useCategoriesStore } from '@/stores/categoriesStore';
 import { format, parseISO } from 'date-fns';
-import { Plus, Search, Filter, Pencil, Trash2, X, RotateCcw, AlertCircle } from 'lucide-vue-next';
+import { Plus, Search, Filter, Pencil, Trash2, X, RotateCcw, AlertCircle, ReceiptText } from 'lucide-vue-next';
 import { storeToRefs } from 'pinia';
 import { useRoute } from 'vue-router';
 import BasePagination from '@/components/base/BasePagination.vue';
@@ -146,7 +146,10 @@ onMounted(() => {
 	<div class="space-y-8">
 		<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
 			<div>
-				<h2 class="text-3xl font-bold text-slate-900 tracking-tight">Transactions</h2>
+				<h2 class="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
+					<ReceiptText class="w-8 h-8" />
+					Transactions
+				</h2>
 				<p class="text-slate-500 mt-1">Manage all your financial records in one place.</p>
 			</div>
 			<div class="flex items-center gap-3">

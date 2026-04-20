@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useCategoriesStore } from '@/stores/categoriesStore';
-import { Plus, Search, Filter, Pencil, Trash2, X, Check, Tag } from 'lucide-vue-next';
+import { Plus, Search, Filter, Pencil, Trash2, Tag } from 'lucide-vue-next';
 import { storeToRefs } from 'pinia';
 import ConfirmDelete from '@/components/ConfirmDelete.vue';
 import CategoryModal from '@/components/CategoryModal.vue';
@@ -104,7 +104,10 @@ onMounted(() => {
     <div class="space-y-8">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-                <h2 class="text-3xl font-bold text-slate-900 tracking-tight">Categories</h2>
+                <h2 class="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
+                    <Tag class="w-8 h-8" />
+                    Categories
+                </h2>
                 <p class="text-slate-500 mt-1">Manage income and expense categories for your records.</p>
             </div>
 
