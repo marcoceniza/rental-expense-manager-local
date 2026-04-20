@@ -89,4 +89,32 @@ class ReportController extends Controller
     
         return response()->json($data);
     }
+
+    public function charityYear(Request $request)
+    {
+        $year = $request->year;
+
+        $start = \Carbon\Carbon::create($year, 1, 1)->startOfYear();
+        $end = \Carbon\Carbon::create($year, 12, 31)->endOfYear();
+
+        // ✅ directly filter via relationship (better than pluck IDs)
+        $query = Transaction::whereBetween('transaction_date', [$start, $end])
+            ->where('type', 'expense')
+            ->whereHas('category', function ($q) {
+                $q->where('is_tuition', true);
+            });
+
+        $expense = (clone $query)->sum('amount');
+
+        $transactions = (clone $query)
+            ->with('category')
+            ->orderByDesc('transaction_date')
+            ->get();
+
+        return response()->json([
+            'year' => $year,
+            'expense' => $expense,
+            'transactions' => $transactions,
+        ]);
+    }
 }
