@@ -19,18 +19,10 @@ const handleLogin = async () => {
 <template>
 	<div class="min-h-screen bg-slate-50 flex items-center justify-center p-4">
 		<div class="w-full max-w-md">
-			<!-- Logo/Brand -->
 			<div class="text-center mb-8">
-				<!-- <div
-					class="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl shadow-lg shadow-blue-200 mb-4">
-					<LogIn class="w-8 h-8 text-white" />
-				</div>
-				<h1 class="text-2xl font-bold text-slate-900 tracking-tight">RentalManager</h1>
-				<p class="text-slate-500 mt-1">Admin Financial Control System</p> -->
-				<figure><img src="@/assets/rental_manager_logo.png" alt="Rental Manager Logo" class="mx-auto w-62.5"/></figure>
+				<figure><img src="@/assets/logo.png" alt="Rental Manager Logo" class="mx-auto w-62.5"/></figure>
 			</div>
 
-			<!-- Login Card -->
 			<div class="bg-white p-8 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100">
 				<h2 class="text-xl font-bold text-slate-900 mb-6">Welcome Back</h2>
 

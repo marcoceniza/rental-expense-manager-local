@@ -34,7 +34,7 @@ watch(() => route.path, () => {
 		<div class="p-6 border-b border-slate-800">
 			<!-- <h1 class="text-xl font-bold tracking-tight">RentalManager</h1>
 			<p class="text-xs text-slate-400 mt-1">Financial Control System</p> -->
-			<figure><img src="@/assets/rental_manager_logo.png" alt="Rental Manager Logo" class="mx-auto w-62.5"/></figure>
+			<figure><img src="@/assets/logo2.png" alt="Rental Manager Logo" class="mx-auto w-62.5"/></figure>
 		</div>
 
 		<nav class="flex-1 p-4 space-y-1 overflow-y-auto">
