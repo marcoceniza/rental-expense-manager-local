@@ -33,7 +33,7 @@ const handleSubmit = () => emit("submit");
                         <h3 class="text-xl font-bold text-slate-900">
                             {{ editingId ? 'Edit Category' : 'New Category' }}
                         </h3>
-                        <button @click="close" class="p-2 hover:bg-white rounded-lg">
+                        <button @click="close" class="p-2 hover:bg-white rounded-lg cursor-pointer">
                             <X class="w-5 h-5 text-slate-400" />
                         </button>
                     </div>
@@ -71,7 +71,7 @@ const handleSubmit = () => emit("submit");
 
                         <!-- Checkbox -->
                         <div class="flex items-center gap-3 p-4 bg-slate-50 rounded-xl">
-                            <input type="checkbox" v-model="formData.is_tuition" class="w-6 h-6" />
+                            <input type="checkbox" v-model="formData.is_tuition" class="w-6 h-6 cursor-pointer" />
                             <div>
                                 <p class="text-sm font-bold text-slate-700">Tuition Related</p>
                                 <p class="text-xs text-slate-500">

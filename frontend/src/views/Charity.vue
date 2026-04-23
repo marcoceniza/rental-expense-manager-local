@@ -60,7 +60,7 @@ onMounted(async () => {
 			</div>
 
 			<div class="flex items-center gap-3 bg-white p-2 rounded-xl shadow-sm border border-slate-200">
-				<button @click="prevYear" class="p-2 hover:bg-slate-50 rounded-lg transition-colors">
+				<button @click="prevYear" class="p-2 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer">
 					<ArrowDownRight class="w-5 h-5 rotate-90 text-slate-400" />
 				</button>
 
@@ -70,7 +70,7 @@ onMounted(async () => {
 
 				<button
 					@click="nextYear"
-					class="p-2 hover:bg-slate-50 rounded-lg transition-colors"
+					class="p-2 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer"
 					:class="{ 'cursor-not-allowed opacity-50': currentYear >= new Date().getFullYear() }"
 					:disabled="currentYear >= new Date().getFullYear()"
 				>

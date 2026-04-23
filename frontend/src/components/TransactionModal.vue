@@ -32,7 +32,7 @@ const handleSubmit = () => emit("submit");
                         <h3 class="text-xl font-bold text-slate-900">
                             {{ editingId ? 'Edit Transaction' : 'New Transaction' }}
                         </h3>
-                        <button @click="close" class="p-2 hover:bg-white rounded-lg">
+                        <button @click="close" class="p-2 hover:bg-white rounded-lg cursor-pointer">
                             <X class="w-5 h-5 text-slate-400" />
                         </button>
                     </div>

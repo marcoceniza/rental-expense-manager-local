@@ -106,7 +106,7 @@ onMounted( async () => {
 
                     <div class="pt-4 flex justify-end">
                         <button type="submit" :disabled="loading"
-                            class="px-8 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-200 active:scale-[0.98] flex items-center gap-2">
+                            class="px-8 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-200 active:scale-[0.98] flex items-center gap-2 cursor-pointer">
                             <span v-if="loading"
                                 class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
                             <Save v-else class="w-5 h-5" />

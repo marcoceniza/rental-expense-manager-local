@@ -48,7 +48,7 @@ const handleLogin = async () => {
 					</div>
 
 					<button type="submit" :disabled="loading"
-						class="w-full py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-200 active:scale-[0.98] flex items-center justify-center gap-2">
+						class="w-full py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-200 active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer">
 						<span v-if="loading"
 							class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
 						<span v-else>Sign In</span>

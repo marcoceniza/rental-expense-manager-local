@@ -17,7 +17,7 @@ const buttonClasses = computed(() => {
     const isInactive = props.disabled || props.loading;
 
     const base = [
-        'font-semibold focus:outline-none focus:ring-2 focus:ring-offset-1 transition inline-flex items-center justify-center gap-2',
+        'font-semibold focus:outline-none focus:ring-2 focus:ring-offset-1 transition inline-flex items-center justify-center gap-2 cursor-pointer',
         isInactive ? 'cursor-not-allowed opacity-60' : 'cursor-pointer hover:opacity-90',
         props.rounded ? 'rounded-lg' : '',
         props.fullWidth ? 'w-full' : '',

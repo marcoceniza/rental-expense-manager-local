@@ -106,7 +106,7 @@ const formatCurrency = (amount) => {
 			</div>
 
 			<button @click="openModal"
-				class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-blue-200 active:scale-95">
+				class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-blue-200 active:scale-95 cursor-pointer">
 				<Plus class="w-5 h-5" />
 				Add Recurring
 			</button>
@@ -164,7 +164,9 @@ const formatCurrency = (amount) => {
 				<div class="flex flex-col items-center gap-3">
 					<Repeat class="w-12 h-12 text-slate-300" />
 					<p class="text-slate-400 italic">No recurring transactions defined yet.</p>
-					<button @click="openModal" class="text-blue-600 font-bold hover:underline">Add your first one</button>
+					<button @click="openModal" class="text-blue-600 font-bold hover:underline cursor-pointer">
+						Add your first one
+					</button>
 				</div>
 			</div>
 		</div>
@@ -178,7 +180,7 @@ const formatCurrency = (amount) => {
 					<h3 class="text-xl font-bold text-slate-900">
 						{{ isEditMode ? 'Edit Recurring Entry' : 'New Recurring Entry' }}
 					</h3>
-					<button @click="closeModal" class="p-2 hover:bg-white rounded-lg transition-colors">
+					<button @click="closeModal" class="p-2 hover:bg-white rounded-lg transition-colors cursor-pointer">
 						<X class="w-5 h-5 text-slate-400" />
 					</button>
 				</div>
@@ -229,11 +231,11 @@ const formatCurrency = (amount) => {
 
 					<div class="pt-4 flex gap-3">
 						<button type="button" @click="closeModal"
-							class="flex-1 px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-colors">
+							class="flex-1 px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-colors cursor-pointer">
 							Cancel
 						</button>
 						<button type="submit"
-							class="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-200 active:scale-95 flex items-center justify-center gap-2">
+							class="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-200 active:scale-95 flex items-center justify-center gap-2 cursor-pointer">
 							<Check class="w-5 h-5" />
 							{{ isEditMode ? 'Update' : 'Save Recurring' }}
 						</button>

@@ -30,6 +30,11 @@ const formatCurrency = (amount) => {
 	return new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(isNaN(value) ? 0 : value);
 };
 
+const pdfCurrency = (value) => {
+	const num = Number(value) || 0;
+	return `PHP ${num.toFixed(2)}`;
+};
+
 const safeCategoryReport = computed(() => categoryReport.value || []);
 
 const fetchReports = (year) => {
@@ -53,10 +58,10 @@ const exportPDF = () => {
 
 	const summaryData = annualStats.value.monthly.map(m => [
 		m.month,
-		formatCurrency(m.income),
-		formatCurrency(m.expense),
-		formatCurrency(m.liability),
-		formatCurrency(m.net),
+		pdfCurrency(m.income),
+		pdfCurrency(m.expense),
+		pdfCurrency(m.liability),
+		pdfCurrency(m.net),
 	]);
 
 	autoTable(doc, {
@@ -65,10 +70,10 @@ const exportPDF = () => {
 		body: summaryData,
 		foot: [[
 			'TOTALS',
-			formatCurrency(annualStats.value.totals.income),
-			formatCurrency(annualStats.value.totals.expense),
-			formatCurrency(annualStats.value.totals.liability),
-			formatCurrency(annualStats.value.totals.net),
+			pdfCurrency(annualStats.value.totals.income),
+			pdfCurrency(annualStats.value.totals.expense),
+			pdfCurrency(annualStats.value.totals.liability),
+			pdfCurrency(annualStats.value.totals.net),
 		]],
 	});
 
@@ -166,7 +171,7 @@ watch(currentYear, (year) => fetchReports(year));
 				</select>
 
 				<button @click="exportPDF"
-					class="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg active:scale-95">
+					class="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg active:scale-95 cursor-pointer">
 					<FileDown class="w-5 h-5" />
 					Export PDF
 				</button>
