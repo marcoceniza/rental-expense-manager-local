@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->enum('type', ['income', 'expense', 'liability']);
             $table->boolean('is_tuition')->default(false);
+            $table->boolean('is_other')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });

@@ -55,7 +55,10 @@ const filteredTransactions = computed(() => {
 		const matchesType =
 			typeFilter.value === 'all' || t.type === typeFilter.value;
 
-		return matchesSearch && matchesType;
+		const matchesTuition =
+			t.category?.is_tuition === 1;
+
+		return matchesSearch && matchesType && matchesTuition;
 	});
 });
 

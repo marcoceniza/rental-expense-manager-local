@@ -9,28 +9,28 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AuthController;
 
 // Route::middleware(['web'])->group(function () {
-//     Route::post('/login', [AuthController::class, 'login']);
-//     Route::post('/register', [AuthController::class, 'register']);
+    // Route::post('/login', [AuthController::class, 'login']);
+    // Route::post('/register', [AuthController::class, 'register']);
 // });
 
 // Route::middleware(['web', 'auth:sanctum'])->group(function () {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
+    // Route::get('/user', function (Request $request) {
+    //     return $request->user();
+    // });
 
-    Route::get('reports/summary', [ReportController::class, 'summary']);
-    Route::get('reports/by-category', [ReportController::class, 'byCategory']);
-    Route::get('reports/annual', [ReportController::class, 'annual']);
-    Route::get('reports/category-summary', [ReportController::class, 'categorySummary']);
-    Route::get('reports/charity-year', [ReportController::class, 'charityYear']);
+    // Route::get('reports/summary', [ReportController::class, 'summary']);
+    // Route::get('reports/by-category', [ReportController::class, 'byCategory']);
+    // Route::get('reports/annual', [ReportController::class, 'annual']);
+    // Route::get('reports/category-summary', [ReportController::class, 'categorySummary']);
+    // Route::get('reports/charity-year', [ReportController::class, 'charityYear']);
 
-    Route::get('transactions/trashed', [TransactionController::class, 'trashed']);
-    Route::post('transactions/{id}/restore', [TransactionController::class, 'restore']);
-    Route::delete('transactions/{id}/force-delete', [TransactionController::class, 'forceDelete']);
+    // Route::get('transactions/trashed', [TransactionController::class, 'trashed']);
+    // Route::post('transactions/{id}/restore', [TransactionController::class, 'restore']);
+    // Route::delete('transactions/{id}/force-delete', [TransactionController::class, 'forceDelete']);
 
-    Route::post('/logout', [AuthController::class, 'logout']);
+    // Route::post('/logout', [AuthController::class, 'logout']);
     
-    Route::apiResource('categories', CategoryController::class);
-    Route::apiResource('transactions', TransactionController::class);
-    Route::apiResource('recurrings', RecurringController::class);
+    // Route::apiResource('categories', CategoryController::class);
+    // Route::apiResource('transactions', TransactionController::class);
+    // Route::apiResource('recurrings', RecurringController::class);
 // });

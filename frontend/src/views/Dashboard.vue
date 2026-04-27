@@ -7,6 +7,7 @@ import SpinnerLoader from '@/components/SpinnerLoader.vue';
 import { useTransactionsStore } from '@/stores/transactionsStore';
 import { useCategoriesStore } from '@/stores/categoriesStore';
 import { useReportsStore } from '@/stores/reportsStore';
+import ConfirmDateChangeModal from '@/components/ConfirmDateChangeModal.vue';
 
 const transactionsStore = useTransactionsStore();
 const categoriesStore = useCategoriesStore();
@@ -18,16 +19,57 @@ const { fetchTransactions } = transactionsStore;
 const { fetchCategories } = categoriesStore;
 const { getMonthlyStats, getAnnualReport } = reportsStore;
 const currentMonth = ref(new Date());
+const showDateModal = ref(false);
+const pendingDate = ref(null);
+
+const applyChange = (date) => {
+    currentMonth.value = date;
+    getMonthlyStats(currentMonth.value);
+};
+
+const handleChange = (newDate) => {
+    const currentYear = currentMonth.value.getFullYear();
+    const newYear = newDate.getFullYear();
+
+    if (currentYear !== newYear) {
+        pendingDate.value = newDate;
+        showDateModal.value = true;
+        return;
+    }
+
+    applyChange(newDate);
+};
+
+const confirmChange = () => {
+    if (pendingDate.value) {
+        applyChange(pendingDate.value);
+    }
+
+    showDateModal.value = false;
+    pendingDate.value = null;
+};
+
+const cancelChange = () => {
+    showDateModal.value = false;
+    pendingDate.value = null;
+};
 
 const prevMonth = () => {
-    currentMonth.value = subMonths(currentMonth.value, 1);
-    getMonthlyStats(currentMonth.value);
+    handleChange(subMonths(currentMonth.value, 1));
 };
 
 const nextMonth = () => {
-    currentMonth.value = addMonths(currentMonth.value, 1);
-    getMonthlyStats(currentMonth.value);
+    handleChange(addMonths(currentMonth.value, 1));
 };
+
+const label = computed(() => {
+    const date = pendingDate.value || currentMonth.value;
+
+    return date.toLocaleString('default', {
+        month: 'long',
+        year: 'numeric',
+    });
+});
 
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-PH', {
@@ -245,4 +287,10 @@ onMounted(() => {
             </div>
         </div>
     </div>
+    <ConfirmDateChangeModal
+        :show="showDateModal"
+        :label="label"
+        @confirm="confirmChange"
+        @cancel="cancelChange"
+    />
 </template>

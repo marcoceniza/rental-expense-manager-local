@@ -6,10 +6,13 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { useReportsStore } from '@/stores/reportsStore';
 import { storeToRefs } from 'pinia';
+import ConfirmDateChangeModal from '@/components/ConfirmDateChangeModal.vue';
 
 const reportsStore = useReportsStore();
 const { annualReport, categoryReport, monthlyLoading } = storeToRefs(reportsStore);
 const currentYear = ref(new Date().getFullYear());
+const pendingYear = ref(null);
+const showYearModal = ref(false);
 
 const annualStats = computed(() => {
 	const data = annualReport.value || {};
@@ -24,6 +27,32 @@ const annualStats = computed(() => {
 		},
 	};
 });
+
+const yearModel = computed({
+    get: () => currentYear.value,
+    set: (newYear) => {
+        if (newYear === currentYear.value) return;
+
+        pendingYear.value = newYear;
+        showYearModal.value = true;
+    },
+});
+
+const confirmYearChange = () => {
+    if (pendingYear.value) {
+        currentYear.value = pendingYear.value;
+    }
+
+    showYearModal.value = false;
+    pendingYear.value = null;
+};
+
+const cancelYearChange = () => {
+    pendingYear.value = null;
+    showYearModal.value = false;
+};
+
+const label = computed(() => String(pendingYear.value));
 
 const formatCurrency = (amount) => {
 	const value = Number(amount);
@@ -165,9 +194,11 @@ watch(currentYear, (year) => fetchReports(year));
 			</div>
 
 			<div class="flex items-center gap-3">
-				<select v-model="currentYear"
+				<select v-model="yearModel"
 					class="bg-white border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 transition-all font-bold text-slate-700 shadow-sm">
-					<option v-for="y in [2024, 2025, 2026, 2027]" :key="y" :value="y">{{ y }}</option>
+					<option v-for="y in [2024, 2025, 2026, 2027]" :key="y" :value="y">
+						{{ y }}
+					</option>
 				</select>
 
 				<button @click="exportPDF"
@@ -292,4 +323,10 @@ watch(currentYear, (year) => fetchReports(year));
 			</div>
 		</div>
 	</div>
+	<ConfirmDateChangeModal
+		:show="showYearModal"
+		:label="label"
+		@confirm="confirmYearChange"
+		@cancel="cancelYearChange"
+	/>
 </template>

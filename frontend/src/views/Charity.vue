@@ -5,12 +5,15 @@ import { Heart, ArrowUpRight, ArrowDownRight } from 'lucide-vue-next';
 import { useReportsStore } from '@/stores/reportsStore';
 import { useCategoriesStore } from '@/stores/categoriesStore';
 import { storeToRefs } from 'pinia';
+import ConfirmDateChangeModal from '@/components/ConfirmDateChangeModal.vue';
 
 const categoriesStore = useCategoriesStore();
 const reportStore = useReportsStore();
 
 const currentYear = ref(new Date().getFullYear());
 const { charityStats, charityLoading } = storeToRefs(reportStore);
+const pendingYear = ref(null);
+const showYearModal = ref(false);
 
 const categoryMap = computed(() => {
 	const map = {};
@@ -20,13 +23,36 @@ const categoryMap = computed(() => {
 	return map;
 });
 
+const handleYearChange = (newYear) => {
+	if (newYear === currentYear.value) return;
+
+	pendingYear.value = newYear;
+	showYearModal.value = true;
+};
+
 const prevYear = () => {
-	currentYear.value--;
+	handleYearChange(currentYear.value - 1);
 };
 
 const nextYear = () => {
-	currentYear.value++;
+	handleYearChange(currentYear.value + 1);
 };
+
+const confirmYearChange = () => {
+	if (pendingYear.value !== null) {
+		currentYear.value = pendingYear.value;
+	}
+
+	showYearModal.value = false;
+	pendingYear.value = null;
+};
+
+const cancelYearChange = () => {
+	showYearModal.value = false;
+	pendingYear.value = null;
+};
+
+const label = computed(() => String(pendingYear.value));
 
 const formatCurrency = (amount) => {
 	return new Intl.NumberFormat('en-PH', {
@@ -141,4 +167,10 @@ onMounted(async () => {
 			</div>
 		</div>
 	</div>
+	<ConfirmDateChangeModal
+		:show="showYearModal"
+		:label="label"
+		@confirm="confirmYearChange"
+		@cancel="cancelYearChange"
+	/>
 </template>

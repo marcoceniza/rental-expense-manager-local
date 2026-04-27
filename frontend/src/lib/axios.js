@@ -6,7 +6,22 @@ const api = axios.create({
         Accept: 'application/json',
         'Content-Type': 'application/json',
     },
-    withCredentials: false, // IMPORTANT! Allows sending cookies
+    withCredentials: true,
 });
+
+// 👉 Response interceptor
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        const status = error.response?.status;
+
+        // ❌ Not authenticated OR session expired
+        if (status === 401 || status === 419) {
+            window.location.href = '/login';
+        }
+
+        return Promise.reject(error);
+    }
+);
 
 export default api;

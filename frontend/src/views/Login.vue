@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useAuthStore } from '@/stores/authStore';
-import { LogIn, Mail, Lock } from 'lucide-vue-next';
+import { Mail, Lock, Eye, EyeOff } from 'lucide-vue-next';
 
 const authStore = useAuthStore();
 const loading = ref(false);
@@ -10,6 +10,7 @@ const formData = ref({
 	email: '',
 	password: '',
 });
+const showPassword = ref(false);
 
 const handleLogin = async () => {
 	await authStore.login(formData.value);
@@ -41,8 +42,12 @@ const handleLogin = async () => {
 						<label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Password</label>
 						<div class="relative">
 							<Lock class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-							<input v-model="formData.password" type="password" placeholder="••••••••"
-								class="w-full pl-12 pr-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 transition-all font-medium" />
+							<input v-model="formData.password" :type="showPassword ? 'text' : 'password'" placeholder="••••••••"
+								class="w-full pl-12 pr-12 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 transition-all font-medium" />
+							<button type="button" @click="showPassword = !showPassword" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
+								<Eye v-if="!showPassword" class="w-5 h-5" />
+								<EyeOff v-else class="w-5 h-5" />
+							</button>
 						</div>
 						<p v-if="authStore.errors?.password?.length" class="text-red-500 mt-2 text-xs">{{ authStore.errors?.password?.[0] }}</p>
 					</div>
