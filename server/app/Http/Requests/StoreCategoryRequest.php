@@ -26,6 +26,7 @@ class StoreCategoryRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'is_tuition' => 'boolean',
+            'is_other' => 'boolean',
             'type' => 'required|in:income,expense,liability',
         ];
     }

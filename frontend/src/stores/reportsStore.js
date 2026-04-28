@@ -1,9 +1,7 @@
-import { defineStore, storeToRefs } from 'pinia';
+import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import api from '@/lib/axios';
-import { startOfMonth, endOfMonth, startOfYear, endOfYear, format, eachMonthOfInterval, isValid, isWithinInterval } from 'date-fns';
-import { useCategoriesStore } from '@/stores/categoriesStore';
-import { useTransactionsStore } from '@/stores/transactionsStore';
+import { startOfMonth, endOfMonth, startOfYear, endOfYear, format, eachMonthOfInterval } from 'date-fns';
 
 export const useReportsStore = defineStore('reports', () => {
     const monthlyReport = ref({});
@@ -15,8 +13,6 @@ export const useReportsStore = defineStore('reports', () => {
     const annualLoading = ref(false);
     const categoryLoading = ref(false);
     const charityLoading = ref(false);
-    const categoriesStore = useCategoriesStore();
-    const transactionsStore = useTransactionsStore();
     const charityStats = ref({
         income: 0,
         expense: 0,

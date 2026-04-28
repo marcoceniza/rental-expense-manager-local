@@ -28,6 +28,7 @@ class UpdateCategoryRequest extends FormRequest
         return [
             'name' => 'sometimes|required|string|max:255',
             'is_tuition' => 'sometimes|boolean',
+            'is_other' => 'sometimes|boolean',
             'type' => [
                 'sometimes',
                 'required',

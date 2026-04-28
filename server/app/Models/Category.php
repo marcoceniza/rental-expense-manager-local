@@ -13,10 +13,12 @@ class Category extends Model
         'name',
         'type',
         'is_tuition',
+        'is_other',
     ];
     
     protected $casts = [
         'is_tuition' => 'boolean',
+        'is_other' => 'boolean',
     ];
 
     public function transactions()

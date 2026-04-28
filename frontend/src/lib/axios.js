@@ -14,10 +14,17 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         const status = error.response?.status;
+        
+        // Check if we are already on the login page to avoid loops
+        const isLoginPage = window.location.pathname.includes('/login');
 
-        // ❌ Not authenticated OR session expired
-        if (status === 401 || status === 419) {
-            window.location.href = '/login';
+        if ((status === 401 || status === 419) && !isRedirecting && !isLoginPage) {
+            isRedirecting = true;
+
+            localStorage.clear();
+
+            // Use href or replace, but ensure the path is correct
+            window.location.href = '/rental-expense-manager/login';
         }
 
         return Promise.reject(error);

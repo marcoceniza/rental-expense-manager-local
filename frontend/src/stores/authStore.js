@@ -3,7 +3,6 @@ import { ref, computed } from 'vue';
 import api from '@/lib/axios';
 import { useRouter } from 'vue-router';
 import { useToastStore } from '@/stores/toastStore';
-import axios from 'axios';
 
 export const useAuthStore = defineStore('auth', () => {
     const user = ref(null);
@@ -11,13 +10,15 @@ export const useAuthStore = defineStore('auth', () => {
     const router = useRouter();
     const { showToast } = useToastStore();
     const errors = ref({});
-    const isAuthenticated = computed(() => !!user.value);
+
+    const isAuthenticated = computed(() => !!user.value?.id);
+    const isAdmin = computed(() => user.value?.user_type === 'admin');
 
     const fetchUser = async () => {
         try {
             const res = await api.get('/user');
             user.value = res.data;
-        } catch (error) {
+        } catch {
             user.value = null;
         }
     };
@@ -26,17 +27,22 @@ export const useAuthStore = defineStore('auth', () => {
         authLoading.value = true;
 
         try {
-            await axios.get('http://localhost/rental-expense-manager/server/public/sanctum/csrf-cookie', { withCredentials: true });
+            await api.get('/sanctum/csrf-cookie');
             await api.post('/login', credentials);
+
             await fetchUser();
 
-            router.push('/dashboard');
+            router.push(
+                user.value?.user_type === 'admin'
+                    ? '/admin/dashboard'
+                    : '/dashboard'
+            );
 
         } catch (error) {
             if (error.response?.status === 422) {
                 errors.value = error.response.data.errors;
             } else {
-                showToast(error.response.data.message, 'error');
+                showToast(error.response?.data?.message || 'Login failed', 'error');
             }
             throw error;
         } finally {
@@ -46,10 +52,13 @@ export const useAuthStore = defineStore('auth', () => {
 
     const register = async (userData) => {
         authLoading.value = true;
+
         try {
-            await axios.get('http://localhost/rental-expense-manager/server/public/sanctum/csrf-cookie', { withCredentials: true });
+            await api.get('/sanctum/csrf-cookie');
             await api.post('/register', userData);
+
             router.push('/login');
+
         } catch (error) {
             if (error.response?.status === 422) {
                 errors.value = error.response.data.errors;
@@ -66,22 +75,20 @@ export const useAuthStore = defineStore('auth', () => {
         authLoading.value = true;
 
         try {
-            await axios.get('http://localhost/rental-expense-manager/server/public/sanctum/csrf-cookie', { withCredentials: true });
+            await api.get('/sanctum/csrf-cookie');
             await api.post('/logout');
-
-            user.value = null;
-
-            router.push('/login');
-
         } catch (error) {
             console.error('Error logging out:', error);
         } finally {
+            user.value = null;
             authLoading.value = false;
+            router.push('/login');
         }
     };
 
     const updateProfile = async (profileData) => {
         authLoading.value = true;
+
         try {
             await api.put('/user', profileData);
             await fetchUser();
@@ -95,11 +102,12 @@ export const useAuthStore = defineStore('auth', () => {
     return {
         user,
         authLoading,
+        errors,
+        isAuthenticated,
+        isAdmin,
         login,
         register,
         logout,
-        errors,
-        isAuthenticated,
         fetchUser,
         updateProfile
     };
