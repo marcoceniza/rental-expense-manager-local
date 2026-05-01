@@ -7,12 +7,14 @@ import autoTable from 'jspdf-autotable';
 import { useReportsStore } from '@/stores/reportsStore';
 import { storeToRefs } from 'pinia';
 import ConfirmDateChangeModal from '@/components/ConfirmDateChangeModal.vue';
+import { useAuthStore } from '@/stores/authStore';
 
 const reportsStore = useReportsStore();
 const { annualReport, categoryReport, monthlyLoading } = storeToRefs(reportsStore);
 const currentYear = ref(new Date().getFullYear());
 const pendingYear = ref(null);
 const showYearModal = ref(false);
+const authStore = useAuthStore();
 
 const annualStats = computed(() => {
 	const data = annualReport.value || {};
@@ -186,14 +188,14 @@ watch(currentYear, (year) => fetchReports(year));
 	<div class="space-y-8">
 		<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
 			<div>
-				<h2 class="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
+				<h2 class="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3 max-sm:text-2xl">
 					<FileChartPie class="w-8 h-8" />
 					Financial Reports
 				</h2>
 				<p class="text-slate-500 mt-1">Analyze your annual performance and export summaries.</p>
 			</div>
 
-			<div class="flex items-center gap-3">
+			<div class="flex items-center gap-3 max-sm:justify-end">
 				<select v-model="yearModel"
 					class="bg-white border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 transition-all font-bold text-slate-700 shadow-sm">
 					<option v-for="y in [2024, 2025, 2026, 2027]" :key="y" :value="y">
@@ -201,7 +203,7 @@ watch(currentYear, (year) => fetchReports(year));
 					</option>
 				</select>
 
-				<button @click="exportPDF"
+				<button v-if="authStore.user?.user_type === 'admin'" @click="exportPDF"
 					class="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg active:scale-95 cursor-pointer">
 					<FileDown class="w-5 h-5" />
 					Export PDF

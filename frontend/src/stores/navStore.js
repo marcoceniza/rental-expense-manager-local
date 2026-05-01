@@ -22,13 +22,13 @@ export const useNavStore = defineStore('nav', () => {
             { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
             { name: 'Transactions', path: '/transactions', icon: ReceiptText },
             { name: 'Reports', path: '/reports', icon: FileChartPie },
+            { name: 'Charity', path: '/charity', icon: Heart },
         ]
 
         if (isAdmin) {
             items.push(
                 { name: 'Recurring', path: '/recurring', icon: Repeat },
                 { name: 'Categories', path: '/categories', icon: Tag },
-                { name: 'Charity', path: '/charity', icon: Heart },
                 { name: 'Others', path: '/others', icon: LayoutGrid },
                 { name: 'Profile', path: '/profile', icon: User },
             )

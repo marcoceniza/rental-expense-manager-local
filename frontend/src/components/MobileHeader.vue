@@ -17,7 +17,7 @@ const authStore = useAuthStore();
             <button @click="uiStore.toggleMenu" class="p-2 hover:bg-slate-800 rounded-lg transition-colors">
                 <Menu v-show="!uiStore.isMenuOpen" class="w-6 h-6" />
             </button>
-            <h1 class="text-lg font-bold">RentalManager</h1>
+            <figure><img src="@/assets/logo2.png" alt="Rental Manager Logo" class="mx-auto w-37.5"/></figure>
         </div>
 
         <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold text-white shadow-inner">

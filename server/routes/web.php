@@ -53,15 +53,15 @@ Route::middleware('auth:sanctum')->group(function () {
     */
     Route::middleware('admin')->group(function () {
 
-        // full CRUD
-        Route::apiResource('categories', CategoryController::class);
-        Route::apiResource('transactions', TransactionController::class);
-        Route::apiResource('recurrings', RecurringController::class);
-
         // extra admin actions
         Route::get('/transactions/trashed', [TransactionController::class, 'trashed']);
         Route::post('/transactions/{id}/restore', [TransactionController::class, 'restore']);
         Route::delete('/transactions/{id}/force-delete', [TransactionController::class, 'forceDelete']);
+
+        // full CRUD
+        Route::apiResource('categories', CategoryController::class)->except(['index']);
+        Route::apiResource('transactions', TransactionController::class)->withTrashed()->except(['index']);
+        Route::apiResource('recurrings', RecurringController::class);
     });
 
 });

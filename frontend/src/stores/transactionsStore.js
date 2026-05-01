@@ -35,11 +35,11 @@ export const useTransactionsStore = defineStore('transactions', () => {
             const response = await api.get(`/transactions?page=${page}`);
 
             transactions.value = response.data.data;
-            pagination.value = response.data;
+            pagination.value = response.data.meta;
 
             transactionsCache.value[page] = {
                 data: response.data.data,
-                pagination: response.data
+                pagination: response.data.meta
             };
 
         } catch (error) {

@@ -75,7 +75,7 @@ onMounted(async () => {
 	<div class="space-y-8">
 		<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
 			<div>
-				<h2 class="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
+				<h2 class="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3 max-sm:text-2xl">
 					<Heart class="w-8 h-8 text-rose-500 fill-rose-500" />
 					Charity
 				</h2>
@@ -84,15 +84,13 @@ onMounted(async () => {
 				</p>
 			</div>
 
-			<div class="flex items-center gap-3 bg-white p-2 rounded-xl shadow-sm border border-slate-200">
+			<div class="flex items-center max-sm:justify-around gap-3 bg-white p-2 rounded-xl shadow-sm border border-slate-200">
 				<button @click="prevYear" class="p-2 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer">
 					<ArrowDownRight class="w-5 h-5 rotate-90 text-slate-400" />
 				</button>
-
 				<span class="text-sm font-semibold text-slate-700 min-w-35 text-center">
 					{{ currentYear }}
 				</span>
-
 				<button
 					@click="nextYear"
 					class="p-2 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer"
@@ -109,7 +107,7 @@ onMounted(async () => {
 				<h3 class="text-lg font-bold text-slate-900">
 					Tuition Related Transactions
 				</h3>
-				<p class="text-red-500"><strong>Total:</strong> {{ formatCurrency(charityStats.expense || 0) }}</p>
+				<p class="text-red-500">Total: <strong>{{ formatCurrency(charityStats.expense || 0) }}</strong></p>
 			</div>
 
 			<div class="overflow-x-auto">

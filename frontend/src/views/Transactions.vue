@@ -9,11 +9,13 @@ import { useRoute } from 'vue-router';
 import BasePagination from '@/components/base/BasePagination.vue';
 import TransactionModal from '@/components/TransactionModal.vue';
 import ConfirmDelete from '@/components/ConfirmDelete.vue';
+import { useAuthStore } from '@/stores/authStore';
 
 const transactionsStore = useTransactionsStore();
 const categoriesStore = useCategoriesStore();
 const { categories, categoryTypes } = storeToRefs(categoriesStore);
 const { transactions, transactionsLoading, pagination, trasanctionsTrash, showTrashModal } = storeToRefs(transactionsStore);
+const authStore = useAuthStore();
 
 const showTransactionModal = ref(false);
 const editingId = ref(null);
@@ -52,11 +54,9 @@ const filteredTransactions = computed(() => {
 			String(field ?? '').toLowerCase().includes(search)
 		);
 
-		const matchesType =
-			typeFilter.value === 'all' || t.type === typeFilter.value;
+		const matchesType = typeFilter.value === 'all' || t.type === typeFilter.value;
 
-		const matchesTuition =
-			t.category?.is_tuition === 1;
+		const matchesTuition = t.category?.is_tuition !== true;
 
 		return matchesSearch && matchesType && matchesTuition;
 	});
@@ -140,8 +140,11 @@ const confirmDeleteHandler = (id, name) => {
 const getTransactionTrashedLength = computed(() => trasanctionsTrash.value.length);
 
 onMounted(() => {
-	categoriesStore.fetchCategories();
-	transactionsStore.fetchTrashedTransactions();
+    categoriesStore.fetchCategories();
+
+    if (authStore.user?.user_type === 'admin') {
+        transactionsStore.fetchTrashedTransactions();
+    }
 });
 </script>
 
@@ -149,13 +152,13 @@ onMounted(() => {
 	<div class="space-y-8">
 		<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
 			<div>
-				<h2 class="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
+				<h2 class="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3 max-sm:text-2xl">
 					<ReceiptText class="w-8 h-8" />
 					Transactions
 				</h2>
 				<p class="text-slate-500 mt-1">Manage all your financial records in one place.</p>
 			</div>
-			<div class="flex items-center gap-3">
+			<div v-if="authStore.user?.user_type === 'admin'" class="flex items-center gap-3 max-sm:justify-end">
 				<button @click="showTrashModal = true"
 					class="relative p-3 bg-white border border-slate-200 text-slate-400 hover:text-red-500 hover:border-red-200 rounded-xl transition-all shadow-sm group cursor-pointer">
 					<Trash2 class="w-5 h-5 group-hover:scale-110 transition-transform" />
@@ -173,8 +176,7 @@ onMounted(() => {
 			</div>
 		</div>
 
-		<div
-			class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row gap-4 items-center">
+		<div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row gap-4 items-center">
 			<div class="relative flex-1 w-full">
 				<Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
 				<input v-model="searchQuery" type="text" placeholder="Search transactions..."
@@ -184,7 +186,7 @@ onMounted(() => {
 			<div class="flex items-center gap-2 w-full md:w-auto">
 				<Filter class="w-5 h-5 text-slate-400" />
 				<select v-model="typeFilter"
-					class="bg-slate-50 border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 transition-all font-medium text-slate-700 min-w-37.5 cursor-pointer">
+					class="bg-slate-50 border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 transition-all font-medium text-slate-700 min-w-37.5 max-sm:w-full cursor-pointer">
 					<option value="all">All Types</option>
 					<option value="income">Income</option>
 					<option value="expense">Expense</option>
@@ -202,7 +204,7 @@ onMounted(() => {
 							<th class="px-6 py-4">Description</th>
 							<th class="px-6 py-4">Category</th>
 							<th class="px-6 py-4 text-right">Amount</th>
-							<th class="px-6 py-4 text-center">Actions</th>
+							<th v-if="authStore.user?.user_type === 'admin'" class="px-6 py-4 text-center">Actions</th>
 						</tr>
 					</thead>
 					<tbody class="divide-y divide-slate-100">
@@ -244,9 +246,9 @@ onMounted(() => {
 									{{ t.type === 'income' ? '+' : '-' }}{{ formatCurrency(t.amount) }}
 								</span>
 							</td>
-							<td class="px-6 py-4">
+							<td v-if="authStore.user?.user_type === 'admin'" class="px-6 py-4">
 								<div
-									class="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+									class="flex items-center justify-center gap-2 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
 									<button @click="openModal(t)"
 										class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer">
 										<Pencil class="w-4 h-4" />

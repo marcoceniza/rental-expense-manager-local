@@ -26,7 +26,7 @@ onMounted( async () => {
 <template>
     <div class="space-y-8">
         <div>
-            <h2 class="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
+            <h2 class="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3 max-sm:text-2xl">
                 <User class="w-8 h-8" />
                 Admin Profile
             </h2>

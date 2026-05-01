@@ -62,6 +62,11 @@ const router = createRouter({
                     name: 'Reports',
                     component: Reports
                 },
+                {
+                    path: 'charity',
+                    name: 'Charity',
+                    component: Charity,
+                },
 
                 // ADMIN ONLY (protected via meta)
                 {
@@ -74,12 +79,6 @@ const router = createRouter({
                     path: 'categories',
                     name: 'Categories',
                     component: Categories,
-                    meta: { requiresAdmin: true }
-                },
-                {
-                    path: 'charity',
-                    name: 'Charity',
-                    component: Charity,
                     meta: { requiresAdmin: true }
                 },
                 {

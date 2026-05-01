@@ -14,24 +14,23 @@ const { user } = storeToRefs(authStore);
 const uiStore = useUiStore();
 const { isMenuOpen } = storeToRefs(uiStore)
 
-const handleLogout = () => {
+const handleLogout = async () => {
 	authStore.logout();
+	uiStore.closeMenu();
 };
 
 watch(() => route.path, () => {
-	uiStore.closeMenu()
+	uiStore.closeMenu();
 });
 </script>
 
 <template>
-	<!-- Mobile Sidebar Overlay -->
-	<div v-if="isMenuOpen" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm relative z-60 md:hidden" @click="uiStore.closeMenu"></div>
+	<div v-if="isMenuOpen" class="relative inset-0 bg-slate-900/50 backdrop-blur-sm z-60 md:hidden" @click="uiStore.closeMenu"></div>
 
 	<button class="absolute z-999 right-3.75 top-3.75">
 		<X  @click="uiStore.toggleMenu" v-show="isMenuOpen" class="text-white w-6 h-6" />
 	</button>
 
-	<!-- Sidebar -->
 	<aside v-if="!['Login', 'Register'].includes(route.name)"
 		class="fixed md:sticky top-0 left-0 z-70 w-64 bg-slate-900 text-white shrink-0 flex flex-col h-screen border-r border-slate-800 transition-transform duration-300 md:translate-x-0"
 		:class="isMenuOpen ? 'translate-x-0' : '-translate-x-full'">

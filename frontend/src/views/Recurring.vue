@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { Plus, Trash2, X, Check, Repeat } from 'lucide-vue-next';
+import { Plus, Trash2, X, Check, Repeat, Pencil } from 'lucide-vue-next';
 import { useRecurringStore } from '@/stores/recurringsStore';
 import { useCategoriesStore } from '@/stores/categoriesStore';
 
@@ -89,7 +89,7 @@ onMounted(() => {
 	<div class="space-y-8">
 		<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
 			<div>
-				<h2 class="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
+				<h2 class="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3 max-sm:text-2xl">
 					<Repeat class="w-8 h-8" />
 					Recurring Transactions
 				</h2>
@@ -115,7 +115,7 @@ onMounted(() => {
 					<div class="flex items-center gap-2">
 						<button @click="editRecurring(r)"
 							class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-							✏️
+							<Pencil class="w-5 h-5" />
 						</button>
 
 						<button @click="deleteRecurring(r.id)"

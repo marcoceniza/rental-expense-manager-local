@@ -107,7 +107,7 @@ onMounted(() => {
     <div class="space-y-8">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-                <h2 class="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
+                <h2 class="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3 max-sm:text-2xl">
                     <LayoutDashboard class="w-8 h-8" />
                     Financial Overview
                 </h2>
@@ -115,7 +115,7 @@ onMounted(() => {
                     Track your rental income and expenses efficiently.
                 </p>
             </div>
-            <div class="flex items-center gap-3 bg-white p-2 rounded-xl shadow-sm border border-slate-200">
+            <div class="flex items-center max-sm:justify-around gap-3 bg-white p-2 rounded-xl shadow-sm border border-slate-200">
                 <button @click="prevMonth" class="p-2 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer">
                     <ArrowDownRight class="w-5 h-5 rotate-90 text-slate-400" />
                 </button>
