@@ -16,7 +16,7 @@ export const useNavStore = defineStore('nav', () => {
     const auth = useAuthStore()
 
     const navItems = computed(() => {
-        const isAdmin = auth.isAdmin // ✅ use computed getter from authStore
+        const isAdmin = auth.isAdmin;
 
         const items = [
             { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
@@ -26,11 +26,11 @@ export const useNavStore = defineStore('nav', () => {
 
         if (isAdmin) {
             items.push(
-                { name: 'Recurring', path: '/admin/recurring', icon: Repeat },
-                { name: 'Categories', path: '/admin/categories', icon: Tag },
-                { name: 'Charity', path: '/admin/charity', icon: Heart },
-                { name: 'Others', path: '/admin/others', icon: LayoutGrid },
-                { name: 'Profile', path: '/admin/profile', icon: User },
+                { name: 'Recurring', path: '/recurring', icon: Repeat },
+                { name: 'Categories', path: '/categories', icon: Tag },
+                { name: 'Charity', path: '/charity', icon: Heart },
+                { name: 'Others', path: '/others', icon: LayoutGrid },
+                { name: 'Profile', path: '/profile', icon: User },
             )
         }
 

@@ -69,7 +69,6 @@ const handleLogin = async () => {
 				</div>
 			</div>
 
-			<!-- Footer Info -->
 			<p class="text-center text-xs text-slate-400 mt-8">
 				&copy; {{ new Date().getFullYear() }} All rights reserved.
 			</p>

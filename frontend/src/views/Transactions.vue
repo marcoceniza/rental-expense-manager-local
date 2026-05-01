@@ -272,9 +272,7 @@ onMounted(() => {
 			:message="getConfirmDeleteData.name" :loading="transactionsLoading.delete" @confirm="deleteTransaction()"
 			@close="isShowingDeleteConfirm = false" actionName="transaction" />
 
-		<!-- Trash Modal -->
-		<div v-if="showTrashModal"
-			class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+		<div v-if="showTrashModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
 			<div
 				class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
 				<div class="p-6 border-b border-slate-100 flex items-center justify-between bg-red-50/50">

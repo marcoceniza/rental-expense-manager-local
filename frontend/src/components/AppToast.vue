@@ -2,7 +2,7 @@
 import { useToastStore } from '@/stores/toastStore';
 import { storeToRefs } from 'pinia';
 
-const { toasts, removeToast } = storeToRefs(useToastStore());
+const { toasts } = storeToRefs(useToastStore());
 
 const typeClass = (type) => {
     return {
@@ -21,9 +21,9 @@ const typeClass = (type) => {
                 class="min-w-62.5 max-w-sm px-4 py-3 rounded shadow-lg text-white flex justify-between items-center"
                 :class="typeClass(toast.type)">
                 <span>{{ toast.message }}</span>
-                <button @click="removeToast(toast.id)" class="ml-3 text-sm opacity-70 hover:opacity-100">
+                <!-- <button @click="removeToast(toast.id)" class="ml-3 text-sm opacity-70 hover:opacity-100">
                     ✕
-                </button>
+                </button> -->
             </div>
         </transition-group>
     </div>

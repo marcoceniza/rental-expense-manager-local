@@ -19,13 +19,6 @@ const formData = ref({
 	description: ''
 });
 
-// LOAD DATA
-onMounted(() => {
-	recurringStore.fetchRecurring();
-	categoriesStore.fetchCategories();
-});
-
-// RESET FORM
 const resetForm = () => {
 	formData.value = {
 		category_id: '',
@@ -38,13 +31,11 @@ const resetForm = () => {
 	editingId.value = null;
 };
 
-// OPEN CREATE
 const openModal = () => {
 	resetForm();
 	showModal.value = true;
 };
 
-// OPEN EDIT
 const editRecurring = (r) => {
 	isEditMode.value = true;
 	editingId.value = r.id;
@@ -60,13 +51,11 @@ const editRecurring = (r) => {
 	showModal.value = true;
 };
 
-// CLOSE
 const closeModal = () => {
 	showModal.value = false;
 	resetForm();
 };
 
-// SUBMIT
 const handleSubmit = async () => {
 	if (isEditMode.value) {
 		await recurringStore.updateRecurring(editingId.value, formData.value);
@@ -77,25 +66,27 @@ const handleSubmit = async () => {
 	closeModal();
 };
 
-// DELETE
 const deleteRecurring = (id) => {
 	if (confirm('Are you sure you want to delete this recurring transaction?')) {
 		recurringStore.deleteRecurring(id);
 	}
 };
 
-// FORMAT
 const formatCurrency = (amount) => {
 	return new Intl.NumberFormat('en-PH', {
 		style: 'currency',
 		currency: 'PHP',
 	}).format(amount);
 };
+
+onMounted(() => {
+	recurringStore.fetchRecurring();
+	categoriesStore.fetchCategories();
+});
 </script>
 
 <template>
 	<div class="space-y-8">
-		<!-- Header -->
 		<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
 			<div>
 				<h2 class="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
@@ -112,7 +103,6 @@ const formatCurrency = (amount) => {
 			</button>
 		</div>
 
-		<!-- Recurring List -->
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 			<div v-for="r in recurringStore.recurringTransactions" :key="r.id"
 				class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-200 transition-all group relative">
@@ -123,7 +113,6 @@ const formatCurrency = (amount) => {
 					</div>
 
 					<div class="flex items-center gap-2">
-						<!-- EDIT (no design change, just small icon) -->
 						<button @click="editRecurring(r)"
 							class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
 							✏️
@@ -171,7 +160,6 @@ const formatCurrency = (amount) => {
 			</div>
 		</div>
 
-		<!-- Modal -->
 		<div v-if="showModal"
 			class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
 			<div

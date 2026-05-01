@@ -15,6 +15,7 @@ const formData = ref({
 
 const showPassword = ref(false);
 const showPasswordConfirmation = ref(false);
+
 const handleRegister = async () => {
 	await authStore.register(formData.value);
 };
@@ -96,7 +97,6 @@ const handleRegister = async () => {
 				</div>
 			</div>
 
-			<!-- Footer Info -->
 			<p class="text-center text-xs text-slate-400 mt-8">
 				&copy; {{ new Date().getFullYear() }} All rights reserved.
 			</p>

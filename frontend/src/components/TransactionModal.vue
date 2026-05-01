@@ -22,12 +22,9 @@ const handleSubmit = () => emit("submit");
 
 <template>
     <Transition name="fade">
-        <div v-if="isOpen"
-            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+        <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
             <Transition name="scale">
                 <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden">
-
-                    <!-- Header -->
                     <div class="p-6 border-b border-slate-100 flex justify-between bg-slate-50">
                         <h3 class="text-xl font-bold text-slate-900">
                             {{ editingId ? 'Edit Transaction' : 'New Transaction' }}
@@ -37,10 +34,7 @@ const handleSubmit = () => emit("submit");
                         </button>
                     </div>
 
-                    <!-- Body -->
                     <form @submit.prevent="handleSubmit" class="p-6 space-y-4">
-
-                        <!-- Date + Type -->
                         <div class="grid grid-cols-2 gap-4">
                             <div class="space-y-1.5">
                                 <label class="text-xs font-bold text-slate-500 uppercase">Date</label>
@@ -58,8 +52,6 @@ const handleSubmit = () => emit("submit");
                                 </select>
                             </div>
                         </div>
-
-                        <!-- Category -->
                         <div class="space-y-1.5">
                             <label class="text-xs font-bold text-slate-500 uppercase">Category</label>
                             <select v-model="formData.category_id" required
@@ -70,29 +62,21 @@ const handleSubmit = () => emit("submit");
                                 </option>
                             </select>
                         </div>
-
-                        <!-- Description -->
                         <div class="space-y-1.5">
                             <label class="text-xs font-bold text-slate-500 uppercase">Description</label>
                             <input v-model="formData.description" type="text" placeholder="e.g., Rent Payment - Ground Floor"
                                 class="w-full px-4 py-3 bg-slate-50 rounded-xl focus:ring-2 focus:ring-blue-500" />
                         </div>
-
-                        <!-- Amount -->
                         <div class="space-y-1.5">
                             <label class="text-xs font-bold text-slate-500 uppercase">Amount (PHP)</label>
                             <input v-model.number="formData.amount" type="number" step="0.01"
                                 class="w-full px-4 py-3 bg-slate-50 rounded-xl font-bold text-lg" />
                         </div>
-
-                        <!-- Remarks -->
                         <div class="space-y-1.5">
                             <label class="text-xs font-bold text-slate-500 uppercase">Remarks</label>
                             <textarea v-model="formData.remarks" placeholder="Add any additional notes..." rows="2"
                                 class="w-full px-4 py-3 bg-slate-50 rounded-xl resize-none"></textarea>
                         </div>
-
-                        <!-- Footer -->
                         <div class="pt-4 flex gap-3">
                             <BaseButton type="button" fullWidth variant="secondary" @click="close">
                                 Cancel

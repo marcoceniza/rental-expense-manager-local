@@ -32,11 +32,7 @@ export const useAuthStore = defineStore('auth', () => {
 
             await fetchUser();
 
-            router.push(
-                user.value?.user_type === 'admin'
-                    ? '/admin/dashboard'
-                    : '/dashboard'
-            );
+            router.push('/dashboard');
 
         } catch (error) {
             if (error.response?.status === 422) {
