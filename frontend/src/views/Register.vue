@@ -1,10 +1,12 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useAuthStore } from '@/stores/authStore';
 import { Mail, Lock, User, Eye, EyeOff } from 'lucide-vue-next';
+import { storeToRefs } from 'pinia';
 
 const authStore = useAuthStore();
+const { errors } = storeToRefs(authStore);
 
 const formData = ref({
 	name: '',
@@ -17,28 +19,41 @@ const showPassword = ref(false);
 const showPasswordConfirmation = ref(false);
 
 const handleRegister = async () => {
-	await authStore.register(formData.value);
+	await authStore.createUser(formData.value);
+
+	if(!authStore.loading) {
+		formData.value = {
+			name: '',
+			email: '',
+			password: '',
+			password_confirmation: '',
+		};
+	}
 };
+
+onMounted(() => {
+	errors.value = {};
+});
 </script>
 
 <template>
 	<div class="min-h-screen bg-slate-50 flex items-center justify-center p-4">
 		<div class="w-full max-w-md">
-			<div class="text-center mb-8">
+			<!-- <div class="text-center mb-8">
 				<figure><img src="@/assets/logo.png" alt="Rental Manager Logo" class="mx-auto w-62.5"/></figure>
-			</div>
+			</div> -->
 
-			<div class="bg-white p-8 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100">
-				<h2 class="text-xl font-bold text-slate-900 mb-6">Create Admin Account</h2>
+			<div class="bg-white px-8 py-12 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100">
+				<h2 class="text-xl font-bold text-slate-900 mb-6">Create User Account</h2>
 
 				<form @submit.prevent="handleRegister" class="space-y-5">
 					<div class="space-y-1.5">
 						<label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Full Name</label>
 						<div class="relative">
 							<User class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-							<input v-model="formData.name" type="text" placeholder="Admin Name"
+							<input v-model="formData.name" type="text" placeholder="User Name"
 								class="w-full pl-12 pr-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 transition-all font-medium" />
-							<p v-if="authStore.errors?.name?.length" class="text-red-500 mt-2 text-xs">{{ authStore.errors?.name?.[0] }}</p>
+							<p v-if="errors?.name?.length" class="text-red-500 mt-2 text-xs">{{ errors?.name?.[0] }}</p>
 						</div>
 					</div>
 
@@ -46,9 +61,9 @@ const handleRegister = async () => {
 						<label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Email Address</label>
 						<div class="relative">
 							<Mail class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-							<input v-model="formData.email" type="email" placeholder="admin@example.com"
+							<input v-model="formData.email" type="email" placeholder="user@example.com"
 								class="w-full pl-12 pr-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 transition-all font-medium" />
-							<p v-if="authStore.errors?.email?.length" class="text-red-500 mt-2 text-xs">{{ authStore.errors?.email?.[0] }}</p>
+							<p v-if="errors?.email?.length" class="text-red-500 mt-2 text-xs">{{ errors?.email?.[0] }}</p>
 						</div>
 					</div>
 
@@ -62,7 +77,7 @@ const handleRegister = async () => {
 								<Eye v-if="!showPassword" class="w-5 h-5" />
 								<EyeOff v-else class="w-5 h-5" />
 							</button>
-							<p v-if="authStore.errors?.password?.length" class="text-red-500 mt-2 text-xs">{{ authStore.errors?.password?.[0] }}</p>
+							<p v-if="errors?.password?.length" class="text-red-500 mt-2 text-xs">{{ errors?.password?.[0] }}</p>
 						</div>
 					</div>
 
@@ -76,7 +91,7 @@ const handleRegister = async () => {
 								<Eye v-if="!showPasswordConfirmation" class="w-5 h-5" />
 								<EyeOff v-else class="w-5 h-5" />
 							</button>
-							<p v-if="authStore.errors?.password_confirmation?.length" class="text-red-500 mt-2 text-xs">{{ authStore.errors?.password_confirmation?.[0] }}</p>
+							<p v-if="errors?.password_confirmation?.length" class="text-red-500 mt-2 text-xs">{{ errors?.password_confirmation?.[0] }}</p>
 						</div>
 					</div>
 
@@ -87,19 +102,11 @@ const handleRegister = async () => {
 						<span v-else>Create Account</span>
 					</button>
 				</form>
-
-				<div class="mt-8 pt-6 border-t border-slate-100 text-center">
-					<p class="text-sm text-slate-500">
-						Already have an account?
-						<RouterLink to="/login" class="text-blue-600 font-bold hover:underline">Sign In Instead
-						</RouterLink>
-					</p>
-				</div>
 			</div>
 
-			<p class="text-center text-xs text-slate-400 mt-8">
+			<!-- <p class="text-center text-xs text-slate-400 mt-8">
 				&copy; {{ new Date().getFullYear() }} All rights reserved.
-			</p>
+			</p> -->
 		</div>
 	</div>
 </template>

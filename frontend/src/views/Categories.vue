@@ -24,7 +24,8 @@ const selectedCategory = ref(null);
 const formData = ref({
     name: '',
     type: 'expense',
-    is_tuition: false
+    is_tuition: false,
+    is_other: false
 });
 
 const filteredCategories = computed(() => {
@@ -46,7 +47,8 @@ const openModal = (c) => {
         formData.value = {
             name: '',
             type: 'expense',
-            is_tuition: false
+            is_tuition: false,
+            is_other: false
         };
     }
     showCategoryModal.value = true;
@@ -59,7 +61,8 @@ const closeModal = () => {
 	formData.value = {
 		name: '',
 		type: 'income',
-		is_tuition: false
+		is_tuition: false,
+		is_other: false
 	};
 
 	errors.value = {}; 

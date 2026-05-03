@@ -13,7 +13,14 @@ export const useReportsStore = defineStore('reports', () => {
     const annualLoading = ref(false);
     const categoryLoading = ref(false);
     const charityLoading = ref(false);
+    const otherLoading = ref(false);
     const charityStats = ref({
+        income: 0,
+        expense: 0,
+        net: 0,
+        transactions: []
+    });
+    const otherStats = ref({
         income: 0,
         expense: 0,
         net: 0,
@@ -145,6 +152,23 @@ export const useReportsStore = defineStore('reports', () => {
         }
     };
 
+    const loadOtherStats = async (year) => {
+        otherLoading.value = true;
+
+        try {
+            const res = await api.get('/reports/other-year', {
+                params: { year }
+            });
+
+            otherStats.value = res.data;
+
+        } catch (error) {
+            console.error('Error fetching other stats:', error);
+        } finally {
+            otherLoading.value = false;
+        }
+    };
+
     return {
         monthlyReport,
         annualReport,
@@ -160,6 +184,9 @@ export const useReportsStore = defineStore('reports', () => {
         charityStats,
         monthlyCache,
         annualCache,
-        clearCache
+        clearCache,
+        loadOtherStats,
+        otherLoading,
+        otherStats
     };
 });

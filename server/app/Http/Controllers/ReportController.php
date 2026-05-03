@@ -4,19 +4,36 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Transaction;
+use Carbon\Carbon;
 
 class ReportController extends Controller
 {
+    // ✅ CENTRAL QUERY (reusable for all reports)
+    private function baseTransactionQuery($start, $end)
+    {
+        $query = Transaction::with('category')
+            ->whereBetween('transaction_date', [$start, $end]);
+
+        // 👇 role-based filtering
+        if (auth()->user()->user_type === 'user') {
+            $query->whereHas('category', function ($q) {
+                $q->where('is_other', false);
+            });
+        }
+
+        return $query;
+    }
+
     public function summary(Request $request)
     {
         $start = $request->start_date;
         $end = $request->end_date;
 
-        $transactions = Transaction::whereBetween('transaction_date', [$start, $end]);
+        $query = $this->baseTransactionQuery($start, $end);
 
-        $income = (clone $transactions)->where('type', 'income')->sum('amount');
-        $expenses = (clone $transactions)->where('type', 'expense')->sum('amount');
-        $liabilities = (clone $transactions)->where('type', 'liability')->sum('amount');
+        $income = (clone $query)->where('type', 'income')->sum('amount');
+        $expenses = (clone $query)->where('type', 'expense')->sum('amount');
+        $liabilities = (clone $query)->where('type', 'liability')->sum('amount');
 
         return response()->json([
             'income' => $income,
@@ -28,35 +45,36 @@ class ReportController extends Controller
 
     public function byCategory(Request $request)
     {
-        return Transaction::with('category')
-            ->whereBetween('transaction_date', [$request->start_date, $request->end_date])
-            ->get()
+        $query = $this->baseTransactionQuery($request->start_date, $request->end_date);
+
+        return $query->get()
             ->groupBy('category.name');
     }
-    
+
     public function annual(Request $request)
     {
         $year = $request->year;
-    
+
         $monthly = collect(range(1, 12))->map(function ($month) use ($year) {
-            $start = \Carbon\Carbon::create($year, $month, 1)->startOfMonth();
-            $end = \Carbon\Carbon::create($year, $month, 1)->endOfMonth();
-    
-            $transactions = Transaction::whereBetween('transaction_date', [$start, $end]);
-    
-            $income = (clone $transactions)->where('type', 'income')->sum('amount');
-            $expenses = (clone $transactions)->where('type', 'expense')->sum('amount');
-            $liabilities = (clone $transactions)->where('type', 'liability')->sum('amount');
-    
+
+            $start = Carbon::create($year, $month, 1)->startOfMonth();
+            $end = Carbon::create($year, $month, 1)->endOfMonth();
+
+            $query = $this->baseTransactionQuery($start, $end);
+
+            $income = (clone $query)->where('type', 'income')->sum('amount');
+            $expense = (clone $query)->where('type', 'expense')->sum('amount');
+            $liability = (clone $query)->where('type', 'liability')->sum('amount');
+
             return [
                 'month' => $start->format('F'),
                 'income' => $income,
-                'expense' => $expenses,
-                'liability' => $liabilities,
-                'net' => $income - ($expenses + $liabilities),
+                'expense' => $expense,
+                'liability' => $liability,
+                'net' => $income - ($expense + $liability),
             ];
         });
-    
+
         return response()->json([
             'monthly' => $monthly,
             'totals' => [
@@ -67,18 +85,21 @@ class ReportController extends Controller
             ]
         ]);
     }
-    
+
     public function categorySummary(Request $request)
     {
         $year = $request->year;
-    
-        $data = Transaction::with('category')
-            ->whereYear('transaction_date', $year)
-            ->get()
+
+        $query = $this->baseTransactionQuery(
+            Carbon::create($year, 1, 1),
+            Carbon::create($year, 12, 31)
+        );
+
+        $data = $query->get()
             ->groupBy('category.name')
             ->map(function ($items, $categoryName) {
                 $first = $items->first();
-    
+
                 return [
                     'name' => $categoryName,
                     'type' => $first->category->type ?? 'unknown',
@@ -86,7 +107,7 @@ class ReportController extends Controller
                 ];
             })
             ->values();
-    
+
         return response()->json($data);
     }
 
@@ -94,16 +115,35 @@ class ReportController extends Controller
     {
         $year = $request->year;
 
-        $start = \Carbon\Carbon::create($year, 1, 1)->startOfYear();
-        $end = \Carbon\Carbon::create($year, 12, 31)->endOfYear();
+        $start = Carbon::create($year, 1, 1)->startOfYear();
+        $end = Carbon::create($year, 12, 31)->endOfYear();
 
-        // ✅ directly filter via relationship (better than pluck IDs)
-        $query = Transaction::whereBetween('transaction_date', [$start, $end])
+        $query = $this->baseTransactionQuery($start, $end)
             ->where('type', 'expense')
             ->whereHas('category', function ($q) {
                 $q->where('is_tuition', true);
             });
 
+        return $this->buildYearResponse($query, $year);
+    }
+
+    public function otherYear(Request $request)
+    {
+        $year = $request->year;
+
+        $start = Carbon::create($year, 1, 1)->startOfYear();
+        $end = Carbon::create($year, 12, 31)->endOfYear();
+
+        $query = $this->baseTransactionQuery($start, $end)
+            ->whereHas('category', function ($q) {
+                $q->where('is_other', true);
+            });
+
+        return $this->buildYearResponse($query, $year);
+    }
+
+    private function buildYearResponse($query, $year)
+    {
         $expense = (clone $query)->sum('amount');
 
         $transactions = (clone $query)

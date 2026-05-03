@@ -80,6 +80,16 @@ const handleSubmit = () => emit("submit");
                             </div>
                         </div>
 
+                        <div class="flex items-center gap-3 p-4 bg-slate-50 rounded-xl">
+                            <input type="checkbox" v-model="formData.is_other" class="w-6 h-6 cursor-pointer" />
+                            <div>
+                                <p class="text-sm font-bold text-slate-700">Other</p>
+                                <p class="text-xs text-slate-500">
+                                    Mark this category as other.
+                                </p>
+                            </div>
+                        </div>
+
                         <!-- Footer -->
                         <div class="pt-4 flex gap-3">
                             <BaseButton type="button" fullWidth variant="secondary" @click="close">

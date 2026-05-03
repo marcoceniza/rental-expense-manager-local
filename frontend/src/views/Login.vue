@@ -1,8 +1,9 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useAuthStore } from '@/stores/authStore';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-vue-next';
+import { storeToRefs } from 'pinia';
 
 const authStore = useAuthStore();
 const loading = ref(false);
@@ -11,10 +12,14 @@ const formData = ref({
 	password: '',
 });
 const showPassword = ref(false);
-
+const { errors } = storeToRefs(authStore);
 const handleLogin = async () => {
 	await authStore.login(formData.value);
 };
+
+onMounted(() => {
+	errors.value = {};
+});
 </script>
 
 <template>
@@ -24,7 +29,7 @@ const handleLogin = async () => {
 				<figure><img src="@/assets/logo.png" alt="Rental Manager Logo" class="mx-auto w-62.5"/></figure>
 			</div>
 
-			<div class="bg-white p-8 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100">
+			<div class="bg-white px-8 py-12 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100">
 				<h2 class="text-xl font-bold text-slate-900 mb-6">Welcome Back</h2>
 
 				<form @submit.prevent="handleLogin" class="space-y-5">
@@ -35,7 +40,7 @@ const handleLogin = async () => {
 							<input v-model="formData.email" type="email" placeholder="admin@example.com"
 								class="w-full pl-12 pr-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 transition-all font-medium" />
 						</div>
-						<p v-if="authStore.errors?.email?.length" class="text-red-500 mt-2 text-xs">{{ authStore.errors?.email?.[0] }}</p>
+						<p v-if="errors?.email?.length" class="text-red-500 mt-2 text-xs">{{ errors?.email?.[0] }}</p>
 					</div>
 
 					<div class="space-y-1.5">
@@ -49,7 +54,7 @@ const handleLogin = async () => {
 								<EyeOff v-else class="w-5 h-5" />
 							</button>
 						</div>
-						<p v-if="authStore.errors?.password?.length" class="text-red-500 mt-2 text-xs">{{ authStore.errors?.password?.[0] }}</p>
+						<p v-if="errors?.password?.length" class="text-red-500 mt-2 text-xs">{{ errors?.password?.[0] }}</p>
 					</div>
 
 					<button type="submit" :disabled="loading"
@@ -59,14 +64,6 @@ const handleLogin = async () => {
 						<span v-else>Sign In</span>
 					</button>
 				</form>
-
-				<div class="mt-8 pt-6 border-t border-slate-100 text-center">
-					<p class="text-sm text-slate-500">
-						Don't have an account?
-						<RouterLink to="/register" class="text-blue-600 font-bold hover:underline">Create Admin Account
-						</RouterLink>
-					</p>
-				</div>
 			</div>
 
 			<p class="text-center text-xs text-slate-400 mt-8">

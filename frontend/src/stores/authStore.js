@@ -35,26 +35,38 @@ export const useAuthStore = defineStore('auth', () => {
             router.push('/dashboard');
 
         } catch (error) {
-            if (error.response?.status === 422) {
+            const status = error.response?.status;
+            const message = error.response?.data?.message;
+
+            // Validation errors (Laravel default)
+            if (status === 422 && error.response?.data?.errors) {
                 errors.value = error.response.data.errors;
-            } else {
-                showToast(error.response?.data?.message || 'Login failed', 'error');
+                return;
             }
+
+            // Invalid credentials or auth failure
+            if (message === 'Invalid credentials') {
+                showToast(message, 'error');
+                errors.value = {};
+                return;
+            }
+
+            // fallback
+            showToast(message || 'Login failed', 'error');
+
             throw error;
         } finally {
             authLoading.value = false;
         }
     };
 
-    const register = async (userData) => {
+    const createUser = async (userData) => {
         authLoading.value = true;
 
         try {
             await api.get('/sanctum/csrf-cookie');
-            await api.post('/register', userData);
-
-            router.push('/login');
-
+            await api.post('/create-user', userData);
+            showToast('User created successfully', 'success');
         } catch (error) {
             if (error.response?.status === 422) {
                 errors.value = error.response.data.errors;
@@ -102,7 +114,7 @@ export const useAuthStore = defineStore('auth', () => {
         isAuthenticated,
         isAdmin,
         login,
-        register,
+        createUser,
         logout,
         fetchUser,
         updateProfile

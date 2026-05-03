@@ -29,4 +29,26 @@ class Transaction extends Model
     {
         return $this->belongsTo(Category::class)->withTrashed();
     }
+
+    public function scopeDashboardVisible($query)
+    {
+        return $query->whereHas('category', function ($q) {
+            $q->where('is_tuition', false)
+            ->where('is_other', false);
+        });
+    }
+
+    public function scopeTuition($query)
+    {
+        return $query->whereHas('category', fn ($q) =>
+            $q->where('is_tuition', true)
+        );
+    }
+
+    public function scopeOther($query)
+    {
+        return $query->whereHas('category', fn ($q) =>
+            $q->where('is_other', true)
+        );
+    }
 }

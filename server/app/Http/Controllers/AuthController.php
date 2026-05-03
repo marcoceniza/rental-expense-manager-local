@@ -14,14 +14,14 @@ use App\Http\Resources\UserResource;
 class AuthController extends Controller
 {
     /**
-     * Register
+     * Create User
      */
-    public function register(RegisterRequest $request)
+    public function createUser(RegisterRequest $request)
     {
         $user = User::create($request->validated());
 
         return response()->json([
-            'message' => 'Registered successfully',
+            'message' => 'User created successfully',
             'user' => new UserResource($user),
         ]);
     }

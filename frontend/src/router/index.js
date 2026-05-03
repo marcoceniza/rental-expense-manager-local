@@ -26,11 +26,6 @@ const router = createRouter({
             component: Login,
             meta: { guest: true }
         },
-        {
-            path: '/register',
-            component: Register,
-            meta: { guest: true }
-        },
 
         // =========================
         // APP ROUTES (ROLE HANDLED IN META)
@@ -69,6 +64,12 @@ const router = createRouter({
                 },
 
                 // ADMIN ONLY (protected via meta)
+                {
+                    path: 'create-user',
+                    name: 'Create User',
+                    component: Register,
+                    meta: { requiresAdmin: true }
+                },
                 {
                     path: 'recurring',
                     name: 'Recurring',

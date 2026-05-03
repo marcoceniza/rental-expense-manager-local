@@ -17,7 +17,7 @@ class TransactionController extends Controller
     public function index()
     {
         return TransactionResource::collection(
-            Transaction::with('category')->orderByDesc('transaction_date')->paginate(10)
+            Transaction::with('category')->dashboardVisible()->latest('transaction_date')->paginate(10)
         );
     }
 

@@ -14,7 +14,6 @@ use App\Http\Controllers\AuthController;
 |--------------------------------------------------------------------------
 */
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/register', [AuthController::class, 'register']);
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +51,9 @@ Route::middleware('auth:sanctum')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::middleware('admin')->group(function () {
+
+        Route::get('/reports/other-year', [ReportController::class, 'otherYear']);
+        Route::post('/create-user', [AuthController::class, 'createUser']);
 
         // extra admin actions
         Route::get('/transactions/trashed', [TransactionController::class, 'trashed']);
